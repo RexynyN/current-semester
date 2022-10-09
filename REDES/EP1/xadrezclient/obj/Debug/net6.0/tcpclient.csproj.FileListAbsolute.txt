@@ -1,0 +1,15 @@
+C:\Users\Admin\Desktop\tcpclient\bin\Debug\net6.0\tcpclient.exe
+C:\Users\Admin\Desktop\tcpclient\bin\Debug\net6.0\tcpclient.deps.json
+C:\Users\Admin\Desktop\tcpclient\bin\Debug\net6.0\tcpclient.runtimeconfig.json
+C:\Users\Admin\Desktop\tcpclient\bin\Debug\net6.0\tcpclient.dll
+C:\Users\Admin\Desktop\tcpclient\bin\Debug\net6.0\tcpclient.pdb
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\tcpclient.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\tcpclient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\tcpclient.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\tcpclient.AssemblyInfo.cs
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\tcpclient.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\tcpclient.dll
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\refint\tcpclient.dll
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\tcpclient.pdb
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\tcpclient.genruntimeconfig.cache
+C:\Users\Admin\Desktop\tcpclient\obj\Debug\net6.0\ref\tcpclient.dll
