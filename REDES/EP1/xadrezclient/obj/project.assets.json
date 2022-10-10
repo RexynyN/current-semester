@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\tcpclient\\tcpclient.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\current-semester\\REDES\\EP1\\xadrezclient\\tcpclient.csproj",
       "projectName": "tcpclient",
-      "projectPath": "C:\\Users\\Admin\\Desktop\\tcpclient\\tcpclient.csproj",
+      "projectPath": "C:\\Users\\Admin\\Desktop\\current-semester\\REDES\\EP1\\xadrezclient\\tcpclient.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Desktop\\tcpclient\\obj\\",
+      "outputPath": "C:\\Users\\Admin\\Desktop\\current-semester\\REDES\\EP1\\xadrezclient\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -1,13 +1,31 @@
 ﻿using System.Net.Sockets;
+using System.Text.Json;
 
 namespace TCPClient
 {
+    public class WeatherForecast
+    {
+        public DateTimeOffset Date { get; set; }
+        public int TemperatureCelsius { get; set; }
+        public string? Summary { get; set; }
+    }
+
     class Sender
     {
         static void Main(String [] args)
         {
+             var weatherForecast = new WeatherForecast
+            {
+                Date = DateTime.Parse("2019-08-01"),
+                TemperatureCelsius = 25,
+                Summary = "Hot"
+            };
+
+            string message = JsonSerializer.Serialize(weatherForecast);
+
+            Console.WriteLine(message);
+            
             String server = "127.0.0.1";
-            String message = "Boa noite bruno";
             
             // Create a TcpClient.
             // Note, for this client to work you need to have a TcpServer
