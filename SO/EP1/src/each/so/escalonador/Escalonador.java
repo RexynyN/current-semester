@@ -66,20 +66,28 @@ public class Escalonador {
         }
     }
 
+
     // Executa 1 quantum para o proximo processo da fila (onde a mágica acontece)
     private void escalonaProcesso() {
         // Retorna o próximo processo na fila
         BCP bcp = prontos.poll();
         Estado estado = null;
 
-        Logger.logln("Executando " + bcp.getNomePrograma() + " - Créditos=" + bcp.retornaCreditos());
         // Decrementa os créditos e checa se todos os processos têm zero créditos
-        if(bcp.decrementaCreditos() == 0){
-            if(checarTodosZeros()){
+        if (bcp.retornaCreditos() == 0) {
+            prontos.offer(bcp);
+
+            if (checarTodosZeros()) {
                 Logger.logln("Todos os processos possuem zero créditos, resetando créditos.");
                 resetarCreditos();
             }
+
+            return;
         }
+
+        // Decrementa os créditos do processo
+        Logger.logln("Executando " + bcp.getNomePrograma() + " - Créditos=" + bcp.retornaCreditos());
+        bcp.decrementaCreditos();
 
         // Simula um quantum (n_com) de execução
         for (int i = 0; i < quantum; i++) {
@@ -109,7 +117,7 @@ public class Escalonador {
             report.instrucoesPorQuantum(quantum);
             prontos.offer(bcp);
             bcp.trocaEstado(PRONTO);
-            Logger.logln("Interrompendo " + bcp.getNomePrograma() + " após " +  quantum + " instruções.");
+            Logger.logln("Interrompendo " + bcp.getNomePrograma() + " após " + quantum + " instruções.");
         }
 
         // Conta troca de processos
@@ -118,27 +126,27 @@ public class Escalonador {
 
     // Reseta os créditos para o seu número de prioridade
     private void resetarCreditos() {
-        for(BCP b: prontos)
+        for (BCP b : prontos)
             b.resetarCreditos();
 
-        for(BCP b: bloqueados)
+        for (BCP b : bloqueados)
             b.resetarCreditos();
     }
 
     // Checa se TODOS os processos tem zero créditos
     private boolean checarTodosZeros() {
         boolean zeros = true;
-        for(BCP b: prontos){
-            if(b.retornaPrioridade() > 0){
+        for (BCP b : prontos) {
+            if (b.retornaCreditos() > 0) {
                 zeros = false;
-                return zeros; 
+                return zeros;
             }
         }
 
-        for(BCP b: bloqueados){
-            if(b.retornaPrioridade() > 0){
+        for (BCP b : bloqueados) {
+            if (b.retornaCreditos() > 0) {
                 zeros = false;
-                return zeros; 
+                return zeros;
             }
         }
 

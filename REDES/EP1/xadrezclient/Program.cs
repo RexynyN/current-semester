@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text.Json;
 
-namespace TCPClient
+namespace XadrezClient
 {
     public class WeatherForecast
     {

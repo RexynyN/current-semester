@@ -24,20 +24,19 @@ public class Logger {
     }
 
     // Salva os logs em um arquivo
-    public static void salvarLog(int quantum){
+    public static void salvarLog(int quantum) {
         String filename = nomeArquivo(quantum);
         File logfile = new File(BASE_PATH + filename);
 
         try (FileOutputStream fos = new FileOutputStream(logfile);
-        OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-        BufferedWriter writer = new BufferedWriter(osw)) {
+                OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+                BufferedWriter writer = new BufferedWriter(osw)) {
             logfile.createNewFile();
 
             for (String line : lines) {
                 writer.append(line);
             }
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             Logger.logln("Houve um erro ao salvar o arquivo de logs, veja o console para o output!");
             Logger.logln("Erro:" + e.toString());
         }
