@@ -106,10 +106,10 @@ public class Escalonador {
 
         // Coloca na fila de prontos e conta as instruções
         if (EXECUTANDO.equals(estado)) {
-            report.instrucoesPorQuantum(3);
+            report.instrucoesPorQuantum(quantum);
             prontos.offer(bcp);
             bcp.trocaEstado(PRONTO);
-            Logger.logln("Interrompendo " + bcp.getNomePrograma() + " após 3 instruções.");
+            Logger.logln("Interrompendo " + bcp.getNomePrograma() + " após " +  quantum + " instruções.");
         }
 
         // Conta troca de processos
