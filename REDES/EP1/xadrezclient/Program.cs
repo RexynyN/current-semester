@@ -1,79 +1,57 @@
-﻿using System.Net.Sockets;
-using System.Text.Json;
+﻿using System;
+using Xadrez.Xadrez;
+using Xadrez.Jogo;
 
-namespace XadrezClient
+
+namespace Xadrez
 {
-    public class WeatherForecast
+    class Program
     {
-        public DateTimeOffset Date { get; set; }
-        public int TemperatureCelsius { get; set; }
-        public string? Summary { get; set; }
-    }
-
-    class Sender
-    {
-        static void Main(String [] args)
+        static void Main(string[] args)
         {
-             var weatherForecast = new WeatherForecast
-            {
-                Date = DateTime.Parse("2019-08-01"),
-                TemperatureCelsius = 25,
-                Summary = "Hot"
-            };
-
-            string message = JsonSerializer.Serialize(weatherForecast);
-
-            Console.WriteLine(message);
-            
-            String server = "127.0.0.1";
-            
-            // Create a TcpClient.
-            // Note, for this client to work you need to have a TcpServer
-            // connected to the same address as specified by the server, port
-            // combination.
-            Int32 port = 13000;
             try
             {
-                // Prefer using declaration to ensure the instance is Disposed later.
-                using TcpClient client = new TcpClient(server, port);
+                // Loop principal do Jogo
+                PartidaXadrez partida = new PartidaXadrez();
+                while (!partida.Terminada)
+                {
+                    try
+                    {
+                        Console.Clear();
+                        Tela.ImprimirPartida(partida);
+                        Console.WriteLine();
+                        Console.Write("Origem: ");
+                        Posicao origem = Tela.LerPosicaoXadrez().ToPosicao();
+                        partida.ValidarPosicaoDeOrigem(origem);
 
-                // Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
-                // Get a client stream for reading and writing.
-                NetworkStream stream = client.GetStream();
+                        bool[,] posicoes = partida.Tab.Peca(origem).MovimentosPossiveis();
+                        Console.Clear();
+                        Tela.ImprimirTabuleiro(partida.Tab, posicoes);
 
-                // Send the message to the connected TcpServer.
-                stream.Write(data, 0, data.Length);
+                        Console.WriteLine();
+                        Console.Write("Destino: ");
+                        Posicao destino = Tela.LerPosicaoXadrez().ToPosicao();
+                        partida.ValidarPosicaoDeDestino(origem, destino);
 
-                Console.WriteLine("Sent: {0}", message);
-
-                // Receive the server response.
-
-                // Buffer to store the response bytes.
-                data = new Byte[256];
-
-                // String to store the response ASCII representation.
-                String responseData = String.Empty;
-
-                // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
+                        partida.RealizaJogada(origem, destino);
+                    }
+                    catch(TabuleiroException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadKey();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.ReadKey();
+                    }
+                }
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
-                Console.WriteLine("ArgumentNullException: {0}", e);
+                Console.WriteLine(e.Message);
             }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
         }
     }
 }
-
-

@@ -73,7 +73,7 @@ public class Escalonador {
         BCP bcp = prontos.poll();
         Estado estado = null;
 
-        // Decrementa os créditos e checa se todos os processos têm zero créditos
+        // Checa se o processo atual e todos os outros processos têm zero créditos
         if (bcp.retornaCreditos() == 0) {
             prontos.offer(bcp);
 

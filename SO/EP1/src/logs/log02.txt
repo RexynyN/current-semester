@@ -1,0 +1,213 @@
+QUANTUM = 2
+Carregando TESTE-7 - Prioridade=12
+Carregando TESTE-4 - Prioridade=10
+Carregando TESTE-9 - Prioridade=8
+Carregando TESTE-8 - Prioridade=8
+Carregando TESTE-6 - Prioridade=6
+Carregando TESTE-5 - Prioridade=4
+Carregando TESTE-10 - Prioridade=4
+Carregando TESTE-2 - Prioridade=3
+Carregando TESTE-3 - Prioridade=2
+Carregando TESTE-1 - Prioridade=1
+Executando TESTE-7 - Créditos=12
+Interrompendo TESTE-7 após 2 instruções.
+Executando TESTE-7 - Créditos=11
+E/S Iniciada por TESTE-7
+Interrompendo TESTE-7 após 2 instruções.
+Executando TESTE-4 - Créditos=10
+E/S Iniciada por TESTE-4
+Interrompendo TESTE-4 após 2 instruções.
+Executando TESTE-8 - Créditos=8
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-7 - Créditos=10
+Interrompendo TESTE-7 após 2 instruções.
+Executando TESTE-4 - Créditos=9
+E/S Iniciada por TESTE-4
+Interrompendo TESTE-4 após 2 instruções.
+Executando TESTE-7 - Créditos=9
+Interrompendo TESTE-7 após 2 instruções.
+Executando TESTE-7 - Créditos=8
+Interrompendo TESTE-7 após 2 instruções.
+Executando TESTE-4 - Créditos=8
+E/S Iniciada por TESTE-4
+Interrompendo TESTE-4 após 2 instruções.
+Executando TESTE-9 - Créditos=8
+Interrompendo TESTE-9 após 2 instruções.
+Executando TESTE-9 - Créditos=7
+E/S Iniciada por TESTE-9
+Interrompendo TESTE-9 após 1 instruções.
+Executando TESTE-4 - Créditos=7
+E/S Iniciada por TESTE-4
+Interrompendo TESTE-4 após 2 instruções.
+Executando TESTE-8 - Créditos=7
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-7 - Créditos=7
+Interrompendo TESTE-7 após 2 instruções.
+Executando TESTE-4 - Créditos=6
+Interrompendo TESTE-4 após 2 instruções.
+Executando TESTE-7 - Créditos=6
+E/S Iniciada por TESTE-7
+Interrompendo TESTE-7 após 1 instruções.
+Executando TESTE-8 - Créditos=6
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-9 - Créditos=6
+Interrompendo TESTE-9 após 2 instruções.
+Executando TESTE-6 - Créditos=6
+Interrompendo TESTE-6 após 2 instruções.
+Executando TESTE-6 - Créditos=5
+E/S Iniciada por TESTE-6
+Interrompendo TESTE-6 após 2 instruções.
+Executando TESTE-9 - Créditos=5
+Interrompendo TESTE-9 após 2 instruções.
+Executando TESTE-7 - Créditos=5
+Interrompendo TESTE-7 após 1 instruções.
+TESTE-7 terminado. X=12. Y=3
+Executando TESTE-4 - Créditos=5
+E/S Iniciada por TESTE-4
+Interrompendo TESTE-4 após 1 instruções.
+Executando TESTE-8 - Créditos=5
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-8 - Créditos=4
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-4 - Créditos=4
+Interrompendo TESTE-4 após 1 instruções.
+TESTE-4 terminado. X=91. Y=5
+Executando TESTE-9 - Créditos=4
+Interrompendo TESTE-9 após 2 instruções.
+Executando TESTE-6 - Créditos=4
+Interrompendo TESTE-6 após 2 instruções.
+Executando TESTE-5 - Créditos=4
+E/S Iniciada por TESTE-5
+Interrompendo TESTE-5 após 2 instruções.
+Executando TESTE-10 - Créditos=4
+Interrompendo TESTE-10 após 2 instruções.
+Executando TESTE-10 - Créditos=3
+Interrompendo TESTE-10 após 2 instruções.
+Executando TESTE-5 - Créditos=3
+E/S Iniciada por TESTE-5
+Interrompendo TESTE-5 após 2 instruções.
+Executando TESTE-8 - Créditos=3
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-9 - Créditos=3
+Interrompendo TESTE-9 após 2 instruções.
+Executando TESTE-6 - Créditos=3
+Interrompendo TESTE-6 após 2 instruções.
+Executando TESTE-2 - Créditos=3
+Interrompendo TESTE-2 após 2 instruções.
+Executando TESTE-2 - Créditos=2
+Interrompendo TESTE-2 após 2 instruções.
+Executando TESTE-5 - Créditos=2
+E/S Iniciada por TESTE-5
+Interrompendo TESTE-5 após 2 instruções.
+Executando TESTE-8 - Créditos=2
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-9 - Créditos=2
+Interrompendo TESTE-9 após 2 instruções.
+Executando TESTE-6 - Créditos=2
+Interrompendo TESTE-6 após 2 instruções.
+Executando TESTE-10 - Créditos=2
+E/S Iniciada por TESTE-10
+Interrompendo TESTE-10 após 1 instruções.
+Executando TESTE-3 - Créditos=2
+Interrompendo TESTE-3 após 2 instruções.
+Executando TESTE-3 - Créditos=1
+Interrompendo TESTE-3 após 2 instruções.
+Executando TESTE-10 - Créditos=1
+Interrompendo TESTE-10 após 1 instruções.
+TESTE-10 terminado. X=0. Y=0
+Executando TESTE-5 - Créditos=1
+E/S Iniciada por TESTE-5
+Interrompendo TESTE-5 após 2 instruções.
+Executando TESTE-8 - Créditos=1
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-2 - Créditos=1
+E/S Iniciada por TESTE-2
+Interrompendo TESTE-2 após 1 instruções.
+Executando TESTE-6 - Créditos=1
+E/S Iniciada por TESTE-6
+Interrompendo TESTE-6 após 1 instruções.
+Executando TESTE-1 - Créditos=1
+Interrompendo TESTE-1 após 2 instruções.
+Executando TESTE-9 - Créditos=1
+E/S Iniciada por TESTE-9
+Interrompendo TESTE-9 após 1 instruções.
+Executando TESTE-6 - Créditos=0
+Interrompendo TESTE-6 após 2 instruções.
+Executando TESTE-6 - Créditos=0
+E/S Iniciada por TESTE-6
+Interrompendo TESTE-6 após 1 instruções.
+Executando TESTE-9 - Créditos=0
+Interrompendo TESTE-9 após 1 instruções.
+TESTE-9 terminado. X=0. Y=0
+Executando TESTE-2 - Créditos=0
+Interrompendo TESTE-2 após 2 instruções.
+Executando TESTE-6 - Créditos=0
+Interrompendo TESTE-6 após 1 instruções.
+TESTE-6 terminado. X=8. Y=5
+Executando TESTE-8 - Créditos=0
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-8 - Créditos=0
+Interrompendo TESTE-8 após 2 instruções.
+Executando TESTE-8 - Créditos=0
+Interrompendo TESTE-8 após 1 instruções.
+TESTE-8 terminado. X=1. Y=3
+Executando TESTE-1 - Créditos=0
+Interrompendo TESTE-1 após 2 instruções.
+Executando TESTE-1 - Créditos=0
+E/S Iniciada por TESTE-1
+Interrompendo TESTE-1 após 1 instruções.
+Executando TESTE-5 - Créditos=0
+E/S Iniciada por TESTE-5
+Interrompendo TESTE-5 após 2 instruções.
+Executando TESTE-2 - Créditos=0
+Interrompendo TESTE-2 após 2 instruções.
+Executando TESTE-1 - Créditos=0
+Interrompendo TESTE-1 após 2 instruções.
+Executando TESTE-5 - Créditos=0
+Interrompendo TESTE-5 após 1 instruções.
+TESTE-5 terminado. X=8. Y=5
+Executando TESTE-3 - Créditos=0
+Interrompendo TESTE-3 após 2 instruções.
+Executando TESTE-3 - Créditos=0
+Interrompendo TESTE-3 após 2 instruções.
+Executando TESTE-3 - Créditos=0
+Interrompendo TESTE-3 após 2 instruções.
+Executando TESTE-3 - Créditos=0
+Interrompendo TESTE-3 após 2 instruções.
+Executando TESTE-3 - Créditos=0
+Interrompendo TESTE-3 após 2 instruções.
+TESTE-3 terminado. X=4. Y=10
+Executando TESTE-2 - Créditos=0
+E/S Iniciada por TESTE-2
+Interrompendo TESTE-2 após 1 instruções.
+Executando TESTE-1 - Créditos=0
+E/S Iniciada por TESTE-1
+Interrompendo TESTE-1 após 2 instruções.
+Executando TESTE-2 - Créditos=0
+Interrompendo TESTE-2 após 2 instruções.
+Executando TESTE-1 - Créditos=0
+Interrompendo TESTE-1 após 1 instruções.
+TESTE-1 terminado. X=2. Y=10
+Executando TESTE-2 - Créditos=0
+Todos os processos possuem zero créditos, resetando créditos.
+Interrompendo TESTE-2 após 2 instruções.
+Executando TESTE-2 - Créditos=0
+Todos os processos possuem zero créditos, resetando créditos.
+E/S Iniciada por TESTE-2
+Interrompendo TESTE-2 após 1 instruções.
+Executando TESTE-2 - Créditos=0
+Todos os processos possuem zero créditos, resetando créditos.
+Interrompendo TESTE-2 após 2 instruções.
+Executando TESTE-2 - Créditos=0
+Todos os processos possuem zero créditos, resetando créditos.
+Interrompendo TESTE-2 após 2 instruções.
+Executando TESTE-2 - Créditos=0
+Todos os processos possuem zero créditos, resetando créditos.
+Interrompendo TESTE-2 após 2 instruções.
+TESTE-2 terminado. X=9. Y=1
+
+
+==== RELATÓRIO DE EXECUÇÃO DO ESCALONADOR =====
+QUANTUM:               2
+MEDIA DE TROCAS:       7.9
+MEDIA DE INSTRUCOES:   1.759493670886076
