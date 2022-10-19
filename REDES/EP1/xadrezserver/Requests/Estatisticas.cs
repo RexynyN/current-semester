@@ -1,4 +1,4 @@
-namespace Requests
+namespace XadrezServer.Requests
 {
     public class Estatisticas
     {

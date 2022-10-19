@@ -1,4 +1,5 @@
 using System.Text.Json;
+using XadrezServer.Requests;
 using XadrezServer.Util;
 using XadrezServer.Xadrez;
 
@@ -8,20 +9,15 @@ namespace XadrezServer
     {
         public static string HandleAction(string action, string content)
         {
-            switch(action)
+            switch (action)
             {
                 case "CriarPartida":
-                    PartidaXadrez part = new PartidaXadrez(Utils.CreateId());
-                    Globals.Partidas.Add(part);
-                    var response = new { Status = "OK", MatchId = part.Id, Player = "Branca" };
-                    return JsonSerializer.Serialize(response);
-                    
+                    return CriarPartida();
+
                 case "EntrarPartida":
-                    
-                    return "";
+                    return EntrarPartida(content);
 
                 case "ValidarPosicaoDeOrigem":
-                    
                     return "";
 
                 case "MovimentosPossiveis":
@@ -35,11 +31,39 @@ namespace XadrezServer
 
                 case "PegarEstatisticas":
                     return "";
-                
-                default: 
-                    var responser = new { Status = "NOK", Message = "BAD REQUEST"};
-                    return JsonSerializer.Serialize(responser);            
+
+                default:
+                    var response = new { Status = "NOK", Message = "BAD REQUEST" };
+                    return JsonSerializer.Serialize(response);
             }
+        }
+
+        public static string CriarPartida()
+        {
+            // Cria uma nova partida e coloca no banco de dados
+            PartidaXadrez match = new PartidaXadrez(Utils.CreateId());
+            Globals.Partidas.Add(match);
+
+            var response = new { Status = "OK", MatchId = match.Id, Player = "Branca" };
+
+            return JsonSerializer.Serialize(response);
+        }
+
+        private static string EntrarPartida(string content)
+        {
+            EnterGame? args = JsonSerializer.Deserialize<EnterGame>(content);
+            
+            PartidaXadrez match = FindMatch(args?.MatchId);
+
+            if(match == null)
+                return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!"});
+
+            return JsonSerializer.Serialize(new { Status = "OK", MatchId = match.Id, Player = "Preta" });
+        }
+
+        private static PartidaXadrez FindMatch(string? id)
+        {
+            return Globals.Partidas.Single(s => s.Id == id);
         }
     }
 }

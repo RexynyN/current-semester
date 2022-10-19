@@ -9,7 +9,6 @@ namespace XadrezServer.Xadrez
     {
         public Torre(Tabuleiro tab, Cor cor) : base(tab, cor)
         {
-
         }
 
         public override string ToString()
@@ -63,7 +62,7 @@ namespace XadrezServer.Xadrez
             }
 
             // Direita
-            pos.DefinirValores(Posicao.Linha, PXadrezServerosicao.Coluna - 1);
+            pos.DefinirValores(Posicao.Linha, Posicao.Coluna - 1);
             while (Tab.PosicaoValida(pos) && PodeMover(pos))
             {
                 mat[pos.Linha, pos.Coluna] = true;
@@ -72,9 +71,6 @@ namespace XadrezServer.Xadrez
 
                 pos.Coluna--;
             }
-
-
-
 
             return mat;
         }

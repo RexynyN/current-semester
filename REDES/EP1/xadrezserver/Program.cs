@@ -26,6 +26,7 @@ namespace XadrezServer
                 // Buffer for reading data
                 Byte[] bytes = new Byte[256];
                 String? data = null;
+                String? response = null;
 
                 // Enter the listening loop.
                 while (true)
@@ -50,13 +51,17 @@ namespace XadrezServer
                         Console.WriteLine("Received: {0}", data);
 
                         string[] datas = data.Split("$");
+
+                        // Representa a ação a ser tomada na chamada (algo como uma rota em uma API)
                         string action = datas[0].Replace("ACTION=", "");
+                        // Conteúdo do pacote
                         string content = datas[1];
 
-                        // Process the data sent by the client.
-                        data = data.ToUpper();
+                        // Processa o conteúdo do pedido
+                        response = Router.HandleAction(action, content);
 
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                        // Pega os bytes da resposta
+                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(response);
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);

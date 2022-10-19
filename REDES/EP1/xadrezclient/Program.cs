@@ -1,5 +1,4 @@
-﻿using System;
-using Xadrez.Xadrez;
+﻿using Xadrez.Xadrez;
 using Xadrez.Jogo;
 
 

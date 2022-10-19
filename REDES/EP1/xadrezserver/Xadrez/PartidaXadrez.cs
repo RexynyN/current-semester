@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Requests;
+using XadrezServer.Requests;
 using Xadrez.Jogo;
 
 namespace XadrezServer.Xadrez
