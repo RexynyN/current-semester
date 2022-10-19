@@ -18,7 +18,7 @@ namespace XadrezServer
                     return EntrarPartida(content);
 
                 case "ValidarPosicaoDeOrigem":
-                    return "";
+                    return ValidarPosicaoDeOrigem(content);
 
                 case "MovimentosPossiveis":
                     return "";
@@ -37,8 +37,56 @@ namespace XadrezServer
                     return JsonSerializer.Serialize(response);
             }
         }
+        
+        private static string MovimentosPossiveis(string content)
+        {
+            Movimento? args = JsonSerializer.Deserialize<Movimento>(content);
+            
+            PartidaXadrez match = FindMatch(args?.MatchId);
 
-        public static string CriarPartida()
+            if(match == null)
+                return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!"});
+
+            Posicao origem = args.Posicao();
+
+            try{
+
+                match.ValidarPosicaoDeOrigem(origem);
+                bool[,] posicoes = partida.Tab.Peca(origem).MovimentosPossiveis();
+
+                return JsonSerializer.Serialize(new { Status = "OK", MatchId = match.Id, Posicoes = posicoes });
+
+            }
+            catch(TabuleiroException e)
+            {
+                return JsonSerializer.Serialize(new { Status = "NOK", MatchId = match.Id, Message = e.Message});
+            }                        
+        } 
+
+        private static string RealizaJogada(string content)
+        {
+            Jogada? args = JsonSerializer.Deserialize<Jogada>(content);
+            
+            PartidaXadrez match = FindMatch(args?.MatchId);
+
+            if(match == null)
+                return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!"});
+
+            Posicao origem = args.Posicao();
+
+            try{
+
+                match.ValidarPosicaoDeDestino(origem, destino);
+
+                match.RealizaJogada(origem, destino);
+            }
+            catch(TabuleiroException e)
+            {
+                return JsonSerializer.Serialize(new { Status = "NOK", MatchId = match.Id, Message = e.Message});
+            }                        
+        } 
+
+        private static string CriarPartida()
         {
             // Cria uma nova partida e coloca no banco de dados
             PartidaXadrez match = new PartidaXadrez(Utils.CreateId());

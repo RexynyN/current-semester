@@ -8,25 +8,24 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {}
+    "/home/breno/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\current-semester\\redes\\ep1\\test\\test.csproj",
+      "projectUniqueName": "/home/breno/codes/current-semester/REDES/EP1/test/test.csproj",
       "projectName": "test",
-      "projectPath": "C:\\Users\\Admin\\Desktop\\current-semester\\redes\\ep1\\test\\test.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Desktop\\current-semester\\redes\\ep1\\test\\obj\\",
+      "projectPath": "/home/breno/codes/current-semester/REDES/EP1/test/test.csproj",
+      "packagesPath": "/home/breno/.nuget/packages/",
+      "outputPath": "/home/breno/codes/current-semester/REDES/EP1/test/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/breno/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -60,7 +59,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/snap/dotnet-sdk/183/sdk/6.0.402/RuntimeIdentifierGraph.json"
       }
     }
   }

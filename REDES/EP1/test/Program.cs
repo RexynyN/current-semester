@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Text.Json;
+using System.Text.Encoding;
 
 namespace XadrezClient
 {
@@ -58,7 +59,7 @@ namespace XadrezClient
 
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                responseData = ASCII.GetString(data, 0, bytes);
                 Console.WriteLine("Received: {0}", responseData);
             }
             catch (ArgumentNullException e)

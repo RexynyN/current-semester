@@ -12,6 +12,11 @@ namespace Xadrez
             {
                 // Loop principal do Jogo
                 PartidaXadrez partida = new PartidaXadrez();
+                
+                // pseudo
+                string MatchId;
+                Cor Player;
+                
                 while (!partida.Terminada)
                 {
                     try
@@ -34,6 +39,7 @@ namespace Xadrez
                         partida.ValidarPosicaoDeDestino(origem, destino);
 
                         partida.RealizaJogada(origem, destino);
+                        connection.AwaitTurn() // PseudoCódigo para implementar uma espera ocupada até o próximo turno
                     }
                     catch(TabuleiroException e)
                     {
