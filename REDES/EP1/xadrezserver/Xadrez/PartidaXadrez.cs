@@ -39,6 +39,25 @@ namespace XadrezServer.Xadrez
                 return Cor.Branca;
         }
 
+        public string [,] Tabuleiro ()
+        {
+            string [,] tabuleiro = new string[8,8];
+
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    Peca peca = Tab.Peca(i, j);
+                    if (peca == null)
+                        tabuleiro[i,j] = "- ";
+                    else 
+                        tabuleiro[i,j] = peca.ToString(); 
+                }
+            }
+
+            return tabuleiro;
+        }
+
         private Peca Rei(Cor cor)
         {
             foreach (Peca x in PecasEmJogo(cor))

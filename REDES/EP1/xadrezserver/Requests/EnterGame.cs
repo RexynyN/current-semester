@@ -2,6 +2,6 @@ namespace XadrezServer.Requests
 {
     class EnterGame
     {
-        public int MatchId { get; set; }
+        public string MatchId { get; set; }
     }
 }

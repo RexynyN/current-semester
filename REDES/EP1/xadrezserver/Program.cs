@@ -47,21 +47,22 @@ namespace XadrezServer
                     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
                         // Translate data bytes to a ASCII string.
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                        data = System.Text.Encoding.UTF8.GetString(bytes, 0, i);
                         Console.WriteLine("Received: {0}", data);
 
                         string[] datas = data.Split("$");
 
                         // Representa a ação a ser tomada na chamada (algo como uma rota em uma API)
-                        string action = datas[0].Replace("ACTION=", "");
+                        string action = datas[0].Trim().Replace("\"", "");
+
                         // Conteúdo do pacote
-                        string content = datas[1];
+                        string content = datas[1].Trim();
 
                         // Processa o conteúdo do pedido
                         response = Router.HandleAction(action, content);
 
                         // Pega os bytes da resposta
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(response);
+                        byte[] msg = System.Text.Encoding.UTF8.GetBytes(response);
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);
@@ -76,6 +77,10 @@ namespace XadrezServer
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException: {0}", e);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("An exception occured: {0}", e);
             }
             finally
             {

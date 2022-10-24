@@ -1,6 +1,8 @@
+using Xadrez.Jogo;
+
 namespace XadrezServer.Requests
 {
-    public class Movimento
+    class Movimento
     {
         public string MatchId { get; set; }
         public string Coluna { get; set; }
@@ -8,7 +10,7 @@ namespace XadrezServer.Requests
 
         public Posicao Posicao()
         {
-            return new Posicao(8 - Linha, char.ToLower(Coluna) - 'a');
+            return new Posicao(8 - Linha, char.ToLower(Coluna[0]) - 'a');
         }
     }
 }
