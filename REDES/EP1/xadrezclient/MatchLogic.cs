@@ -1,4 +1,4 @@
-using XadrezClient.TCP;
+ using XadrezClient.TCP;
 using XadrezClient.Response;
 using System.Text.Json;
 
@@ -8,6 +8,7 @@ namespace XadrezClient
     {
         public string MatchId { get; private set; }
         public string Player { get; private set; }
+        public string[,] Tabuleiro { get; private set; } 
         public TCPSender Connection { private get; private set; }
 
         public MatchLogic(string matchId, string player)
@@ -15,6 +16,16 @@ namespace XadrezClient
             MatchId = matchId;
             Player = player;
             Connection = new TCPSender();
+        }
+        
+        public bool[,] MovimentosPossiveis (Posicao pos)
+        {
+
+        }
+
+        public void RealizaJogada(Posicao origem, Posicao destino)
+        {
+            throw new TabuleiroException("WAAAAAAAAAAA");
         }
 
         static public MatchLogic CriarPartida()

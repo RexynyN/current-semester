@@ -7,11 +7,10 @@ namespace Xadrez
     {
         static void Main(string[] args)
         {
-            Menu();
+            StartMenu(false);
         }
 
-        static void Menu
-        ()
+        static void StartMenu(bool error)
         {
             Console.Clear();
 
@@ -20,6 +19,9 @@ namespace Xadrez
             {
                 try
                 {
+                    if (error)
+                        Printer.Error("Houve um erro ao jogar, tente novamente.");
+
                     Console.WriteLine("SUPER XADREZ MULTIPLAYER DA 04 EACH:");
                     Console.WriteLine("1 - Criar uma partida");
                     Console.WriteLine("2 - Entrar em uma partida");
@@ -39,19 +41,30 @@ namespace Xadrez
                 Console.ReadKey();
             }
 
-            if(escolha == 1)
-            {
-                Logic.CriarPartida();
-                Xadrez();
+            try{
+                if(escolha == 1)
+                {
+                    MatchLogic match = MatchLogic.CriarPartida();
+                    
+                    if(match != null)
+                        Xadrez(match);
+                }
+                else if(escolha == 2)
+                {
+                    Console.Clear();
+                    EntrarPartida();
+                }
             }
-            else if(escolha == 2)
+            catch(Exception e)
             {
-                Console.Clear();
-                EntrarPartida();
+                Console.WriteLine("Erro: " + e.Message);
+                Console.WriteLine("Pressione enter para voltar ao menu principal.")
+                Console.ReadKey();
+                StartMenu(true);
             }
         }
 
-        static EntrarPartida()
+        public static void  EntrarPartida()
         {
             string cod = "";
             while(true)
@@ -59,22 +72,22 @@ namespace Xadrez
                 Console.Write("Digite o código de Jogo: ")
                 cod = Console.ReadLine();
 
-                if(Logic.EntrarPartida(cod))
+                MatchLogic match = MatchLogic.EntrarPartida(cod)
+                if(match != null)
+                {
+                    Xadrez(match);
                     break;
+                }
+
+                Console.Clear();
+                Printer.Error("O código não foi encontrado, tente novamente!");
             }
         }
 
-        static void Xadrez ()
+        public static void Xadrez (MatchLogic partida)
         {
             try
             {
-                // Loop principal do Jogo
-                PartidaXadrez partida = new PartidaXadrez();
-                
-                // pseudo
-                string MatchId;
-                Cor Player;
-                
                 while (!partida.Terminada)
                 {
                     try
@@ -82,31 +95,32 @@ namespace Xadrez
                         Console.Clear();
                         Tela.ImprimirPartida(partida);
                         Console.WriteLine();
+                        Console.WriteLine("Sua vez!");
                         Console.Write("Origem: ");
                         Posicao origem = Tela.LerPosicaoXadrez().ToPosicao();
-                        partida.ValidarPosicaoDeOrigem(origem);
-
-
-                        bool[,] posicoes = partida.Tab.Peca(origem).MovimentosPossiveis();
+                        
+                        bool[,] posicoes = partida.MovimentosPossiveis(origem);
                         Console.Clear();
                         Tela.ImprimirTabuleiro(partida.Tab, posicoes);
 
                         Console.WriteLine();
+                        Console.WriteLine("Sua vez!");
                         Console.Write("Destino: ");
                         Posicao destino = Tela.LerPosicaoXadrez().ToPosicao();
-                        partida.ValidarPosicaoDeDestino(origem, destino);
 
                         partida.RealizaJogada(origem, destino);
-                        connection.AwaitTurn(); // PseudoCódigo para implementar uma espera ocupada até o próximo turno
+                        Tela.ImprimirTabuleiro(partida);
+                        Console.WriteLine("Esperando o turno do oponente!");
+                        partida.EsperarTurno(); // PseudoCódigo para implementar uma espera ocupada até o próximo turno
                     }
-                    catch(TabuleiroException e)
+                    catch(TabuleiroException e )
                     {
                         Console.WriteLine(e.Message);
                         Console.ReadKey();
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine("Houve um erro na partida\nMensagem:" + e.Message);
                         Console.ReadKey();
                     }
                 }
