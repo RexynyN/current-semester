@@ -4,9 +4,10 @@ namespace XadrezClient
     {
         public static void Error(string message)
         {
+            ConsoleColor aux = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.Reset;
+            Console.ForegroundColor = aux;
         }
     }
 }

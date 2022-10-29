@@ -9,9 +9,10 @@ namespace Xadrez.Xadrez
         public Tabuleiro Tab { get; set; }
         public int Turno { get; private set; }
         public bool Xeque { get; private set; }
+        public bool Terminada { get; private set; }
+
         public Peca VulneravelEnPassant { get; private set; }
         public Cor JogadorAtual { get; private set; }
-        public bool Terminada { get; private set; }
         private HashSet<Peca> Pecas = new HashSet<Peca>();
         private HashSet<Peca> Capturadas = new HashSet<Peca>();
 

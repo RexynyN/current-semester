@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Text;
 using System.Text.Json;
 
 namespace XadrezClient.TCP
@@ -34,15 +35,26 @@ namespace XadrezClient.TCP
 
                 Console.WriteLine("Sent: {0}", package);
 
-                data = new Byte[256];
+                data = new Byte[32768];
 
                 String responseData = String.Empty;
 
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.UTF8.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
 
-                return responseData;
+                byte[] buffer = new byte[1024];
+                StringBuilder message = new StringBuilder();
+                int numberOfBytesRead = 0;
+
+                do{
+                    numberOfBytesRead = stream.Read(buffer, 0, buffer.Length);
+
+                    message.AppendFormat("{0}", Encoding.ASCII.GetString(buffer, 0, numberOfBytesRead));
+                }
+                while(stream.DataAvailable);
+
+                Console.WriteLine("Received: {0}",  message.ToString());
+
+
+                return message.ToString();
             }
             catch (ArgumentNullException e)
             {
@@ -57,5 +69,3 @@ namespace XadrezClient.TCP
         }
     }
 }
-
-

@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xadrez.Jogo;
-using Xadrez.Xadrez;
-
+﻿using Xadrez.Xadrez;
+using XadrezClient;
 
 namespace Xadrez
 {
     class Tela
     {
-        public static void ImprimirPartida(PartidaXadrez partida)
+        public static void ImprimirPartida(MatchLogic partida)
         {
-            ImprimirTabuleiro(partida.Tab);
+            ImprimirTabuleiro(partida.Tabuleiro);
             Console.WriteLine();
             ImprimirPecasCapturadas(partida);
             Console.WriteLine();
             Console.WriteLine("Turno: " + partida.Turno);
-            if (!partida.Terminada)
+            if (!partida.Terminada())
             {
                 Console.WriteLine("Aguardando Jogada: " + partida.JogadorAtual);
                 if (partida.Xeque)
@@ -29,59 +25,48 @@ namespace Xadrez
             }
 
         }
-        public static void ImprimirPecasCapturadas(PartidaXadrez partida)
+        public static void ImprimirPecasCapturadas(MatchLogic partida)
         {
             Console.WriteLine("Peças Capturadas: ");
             Console.Write("Brancas: ");
-            ImprimirConjunto(partida.PecasCapturadas(Cor.Branca));
-            Console.WriteLine();
+            Console.WriteLine(partida.PegasBrancas);
             Console.Write("Pretas: ");
             ConsoleColor aux = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Yellow;
-            ImprimirConjunto(partida.PecasCapturadas(Cor.Preta));
+            Console.WriteLine(partida.PegasPretas);
             Console.ForegroundColor = aux;
-            Console.WriteLine();
         }
 
-        public static void ImprimirConjunto(HashSet<Peca> conjunto)
+        public static void ImprimirTabuleiro(string[,] tab)
         {
-            Console.Write("[");
-            foreach (Peca x in conjunto)
-            {
-                Console.Write(x + " ");
-            }
-            Console.Write("]");
-        }
-        public static void ImprimirTabuleiro(Tabuleiro tab)
-        {
-            for (int i = 0; i < tab.Linhas; i++)
+            for (int i = 0; i < tab.GetLength(0); i++)
             {
                 Console.Write(8 - i + " ");
-                for (int j = 0; j < tab.Colunas; j++)
+                for (int j = 0; j < tab.GetLength(1); j++)
                 {
-                    ImprimirPeca(tab.Peca(i, j));
+                    ImprimirPeca(tab[i, j]);
                 }
                 Console.WriteLine();
             }
             Console.WriteLine("  a b c d e f g h");
         }
 
-        public static void ImprimirTabuleiro(Tabuleiro tab, bool[,] posicoes)
+        public static void ImprimirTabuleiro(string [,] tab, bool[,] posicoes)
         {
             ConsoleColor original = Console.BackgroundColor;
             ConsoleColor destaque = ConsoleColor.DarkGray;
 
-            for (int i = 0; i < tab.Linhas; i++)
+            for (int i = 0; i < tab.GetLength(0); i++)
             {
                 Console.Write(8 - i + " ");
-                for (int j = 0; j < tab.Colunas; j++)
+                for (int j = 0; j < tab.GetLength(1); j++)
                 {
                     if (posicoes[i, j])
                         Console.BackgroundColor = destaque;
                     else
                         Console.BackgroundColor = original;
 
-                    ImprimirPeca(tab.Peca(i, j));
+                    ImprimirPeca(tab[i,j]);
                     Console.BackgroundColor = original;
                 }
                 Console.WriteLine();
@@ -91,21 +76,22 @@ namespace Xadrez
 
         }
 
-        public static void ImprimirPeca(Peca peca)
+        public static void ImprimirPeca(string peca)
         {
-            if (peca == null)
+            if (peca == "-")
                 Console.Write("- ");
             else
             {
-                if (peca.Cor == Cor.Branca)
-                    Console.Write(peca + " ");
-                else
+                if (peca.Contains("P+"))
                 {
                     ConsoleColor aux = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write(peca + " ");
+                    Console.Write(peca.Replace("P+", "") + " ");
                     Console.ForegroundColor = aux;
                 }
+                else
+                    Console.Write(peca + " ");
+                    
             }
         }
 

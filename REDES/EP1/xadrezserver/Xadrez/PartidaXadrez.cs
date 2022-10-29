@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using XadrezServer.Requests;
+﻿using XadrezServer.Requests;
 using Xadrez.Jogo;
 
 namespace XadrezServer.Xadrez
@@ -39,20 +37,27 @@ namespace XadrezServer.Xadrez
                 return Cor.Branca;
         }
 
-        public string [,] Tabuleiro ()
+        public string [][] Tabuleiro ()
         {
-            string [,] tabuleiro = new string[8,8];
-
+            // string [,] tabuleiro = new string[8,8];
+            string [] [] tabuleiro = new string [8][];
             for (int i = 0; i < 8; i++)
             {
+                string [] aux = new string [8];
                 for (int j = 0; j < 8; j++)
                 {
                     Peca peca = Tab.Peca(i, j);
                     if (peca == null)
-                        tabuleiro[i,j] = "- ";
-                    else 
-                        tabuleiro[i,j] = peca.ToString(); 
+                        aux[j] = "-";
+                    else
+                    {
+                        if(peca.Cor == Cor.Preta)
+                            aux[j] = "P+" + peca.ToString(); 
+                        else
+                            aux[j] = peca.ToString(); 
+                    }
                 }
+                tabuleiro[i] = aux;
             }
 
             return tabuleiro;
@@ -66,6 +71,19 @@ namespace XadrezServer.Xadrez
                     return x;
             }
             return null;
+        }
+
+        public string PecasPegas(Cor player)
+        {
+            string conjunto = "";
+            conjunto += "[";
+            foreach (Peca x in PecasCapturadas(player))
+            {
+                conjunto += x + " ";
+            }
+            conjunto += "]";
+
+            return conjunto;
         }
 
         public bool EstaEmXeque(Cor cor)

@@ -80,14 +80,10 @@ namespace XadrezServer
             }
             catch(Exception e)
             {
-                Console.WriteLine("An exception occured: {0}", e);
-            }
-            finally
-            {
-                // Stop listening for new clients.
-                server?.Stop();
+                Console.WriteLine("An exception occured while serving a request: {0}", e);
             }
 
+            server?.Stop();
             Console.WriteLine("\nHit enter to continue...");
             Console.Read();
         }
