@@ -9,5 +9,13 @@ namespace XadrezClient
             Console.WriteLine(message);
             Console.ForegroundColor = aux;
         }
+
+        public static void Black (string message)
+        {
+            ConsoleColor aux = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(message);
+            Console.ForegroundColor = aux;
+        }
     }
 }

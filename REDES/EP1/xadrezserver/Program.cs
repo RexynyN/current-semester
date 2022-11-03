@@ -36,7 +36,7 @@ namespace XadrezServer
                     // Perform a blocking call to accept requests.
                     // You could also use server.AcceptSocket() here.
                     TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("Connected!");
+                    Console.WriteLine("Connected!"); 
                     data = null;
 
                     // Get a stream object for reading and writing
@@ -66,7 +66,7 @@ namespace XadrezServer
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", data);
+                        Console.WriteLine("Sent: {0}", response);
 
                     }
 

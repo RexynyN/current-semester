@@ -5,7 +5,7 @@ namespace XadrezServer.Requests
     class Move
     {
         public string MatchId { get; set; }
-        public string? Player { get; private set; }
+        public string Player { get; set; }
         public int LinhaOrigem { get; set; }
         public int ColunaOrigem { get; set; }
         public int LinhaDestino { get; set; }

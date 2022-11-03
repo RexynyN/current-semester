@@ -7,6 +7,12 @@ namespace Xadrez
     {
         public static void ImprimirPartida(MatchLogic partida)
         {
+            Console.WriteLine("Partida: " + partida.MatchId);
+            if(partida.Player == "Preta")
+                Printer.Black("Você controla as peças Pretas\n");
+            else 
+                Console.WriteLine("Você controla as peças Brancas\n");
+            
             ImprimirTabuleiro(partida.Tabuleiro);
             Console.WriteLine();
             ImprimirPecasCapturadas(partida);
@@ -21,7 +27,7 @@ namespace Xadrez
             else
             {
                 Console.WriteLine("XEQUEMATE!");
-                Console.WriteLine("Vencedor: " + partida.JogadorAtual);
+                Console.WriteLine("Vencedor: " + partida.Vencedor);
             }
 
         }
@@ -31,10 +37,7 @@ namespace Xadrez
             Console.Write("Brancas: ");
             Console.WriteLine(partida.PegasBrancas);
             Console.Write("Pretas: ");
-            ConsoleColor aux = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(partida.PegasPretas);
-            Console.ForegroundColor = aux;
+            Printer.Black(partida.PegasPretas);
         }
 
         public static void ImprimirTabuleiro(string[,] tab)

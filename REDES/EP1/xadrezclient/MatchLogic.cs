@@ -12,9 +12,11 @@ namespace XadrezClient
         public string[,] Tabuleiro { get; private set; }
         public int Turno { get; private set; }
         public string JogadorAtual { get; private set; }
+        public string Vencedor { get; private set; }
         public bool Xeque { get; private set; }
         public string PegasBrancas { get; private set; }
         public string PegasPretas { get; private set; }
+        public bool PartidaTerminada { get; private set; }
 
         private TCPSender Connection;
 
@@ -38,9 +40,13 @@ namespace XadrezClient
                 MatchId = MatchId,
             });
 
-            BaseResponse? response = JsonSerializer.Deserialize<BaseResponse>(Connection.SendRequest(request));
+            Terminada? response = JsonSerializer.Deserialize<Terminada>(Connection.SendRequest(request));
 
-            return response?.Message == "OK";
+            Vencedor = response?.Vencedor;
+
+            PartidaTerminada = response?.Message == "OK";
+
+            return PartidaTerminada;
         }
 
         public bool[,] MovimentosPossiveis(Posicao origem)
@@ -89,20 +95,29 @@ namespace XadrezClient
 
         public void EsperarTurno()
         {
-            while (true)
-            {
-                Thread.Sleep(500);
-
-                string request = Util.CreateRequest("EsperarTurno", new
+            string request = Util.CreateRequest("EsperarTurno", new
                 {
                     MatchId = MatchId,
                     Player = Player
                 });
+            
+            while (true)
+            {
+                Thread.Sleep(500);
 
-                BusyWait? busy = JsonSerializer.Deserialize<BusyWait>(Connection.SendRequest(request));
+                Partida? busy = JsonSerializer.Deserialize<Partida>(Connection.SendRequest(request));
 
-                if (busy.Message == "OK") // Pseudo, precisa saber o que retorna quando o server dá pau
+                if (busy.Message == "OK")
+                {
+                    JogadorAtual = busy.JogadorAtual;
+                    Tabuleiro = busy.MatrizTabuleiro(); 
+                    Xeque = busy.Xeque; 
+                    Turno = busy.Turno;
+                    JogadorAtual = busy.JogadorAtual;
+                    PegasPretas = busy.PegasPretas;
+                    PegasBrancas = busy.PegasBrancas;
                     break;
+                }
             }
         }
 

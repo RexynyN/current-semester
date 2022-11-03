@@ -1,5 +1,5 @@
-﻿using XadrezServer.Requests;
-using Xadrez.Jogo;
+﻿using Xadrez.Jogo;
+using XadrezServer.Requests;
 
 namespace XadrezServer.Xadrez
 {
@@ -12,6 +12,7 @@ namespace XadrezServer.Xadrez
         public Peca? VulneravelEnPassant { get; private set; }
         public Cor JogadorAtual { get; private set; }
         public bool Terminada { get; private set; }
+        public string Vencedor { get; private set; }
         private HashSet<Peca> Pecas = new HashSet<Peca>();
         private HashSet<Peca> Capturadas = new HashSet<Peca>();
         private Estatisticas statBranca = new Estatisticas();
@@ -37,13 +38,13 @@ namespace XadrezServer.Xadrez
                 return Cor.Branca;
         }
 
-        public string [][] Tabuleiro ()
+        public string[][] Tabuleiro()
         {
             // string [,] tabuleiro = new string[8,8];
-            string [] [] tabuleiro = new string [8][];
+            string[][] tabuleiro = new string[8][];
             for (int i = 0; i < 8; i++)
             {
-                string [] aux = new string [8];
+                string[] aux = new string[8];
                 for (int j = 0; j < 8; j++)
                 {
                     Peca peca = Tab.Peca(i, j);
@@ -51,10 +52,10 @@ namespace XadrezServer.Xadrez
                         aux[j] = "-";
                     else
                     {
-                        if(peca.Cor == Cor.Preta)
-                            aux[j] = "P+" + peca.ToString(); 
+                        if (peca.Cor == Cor.Preta)
+                            aux[j] = "P+" + peca.ToString();
                         else
-                            aux[j] = peca.ToString(); 
+                            aux[j] = peca.ToString();
                     }
                 }
                 tabuleiro[i] = aux;
@@ -90,7 +91,7 @@ namespace XadrezServer.Xadrez
         {
             Peca rei = Rei(cor);
             if (rei == null)
-                throw new TabuleiroException("Não tem rei no Tabuleiro");
+                return true;
 
             foreach (Peca x in PecasEmJogo(Adversaria(cor)))
             {
@@ -139,7 +140,7 @@ namespace XadrezServer.Xadrez
             // #jogadaEspecial enPassant
             if (p is Peao)
             {
-                if(origem.Coluna != destino.Coluna && pecaCapturada == null)
+                if (origem.Coluna != destino.Coluna && pecaCapturada == null)
                 {
                     Posicao posP;
                     if (p.Cor == Cor.Branca)
@@ -211,7 +212,7 @@ namespace XadrezServer.Xadrez
             }
 
             // #jogadaEspecial enPassant
-            if(p is Peao)
+            if (p is Peao)
             {
                 if (origem.Coluna != destino.Coluna && capturada == VulneravelEnPassant)
                 {
@@ -230,16 +231,16 @@ namespace XadrezServer.Xadrez
         public void RealizaJogada(Posicao origem, Posicao destino)
         {
             Peca pecaCapturada = ExecutaMovimento(origem, destino);
-            if (EstaEmXeque(JogadorAtual))
-            {
-                DesfazMovimento(origem, destino, pecaCapturada);
-                throw new TabuleiroException("Você não pode se colocar em xeque!");
-            }
+            // if (EstaEmXeque(JogadorAtual))
+            // {
+            //     DesfazMovimento(origem, destino, pecaCapturada);
+            //     throw new TabuleiroException("Você não pode se colocar em xeque!");
+            // }
             Peca p = Tab.Peca(destino);
             // #jogadaEspecial promocao
-            if(p is Peao)
+            if (p is Peao)
             {
-                if(p.Cor == Cor.Branca && destino.Linha == 0 || (p.Cor == Cor.Preta && destino.Linha == 7))
+                if ((p.Cor == Cor.Branca && destino.Linha == 0) || (p.Cor == Cor.Preta && destino.Linha == 7))
                 {
                     p = Tab.RetirarPeca(destino);
                     Pecas.Remove(p);
@@ -249,10 +250,18 @@ namespace XadrezServer.Xadrez
                 }
             }
 
-            Xeque = EstaEmXeque(JogadorAtual);
+            Xeque = EstaEmXeque(JogadorAtual) || EstaEmXeque(Adversaria(JogadorAtual));
 
-            if (TesteXequemate(JogadorAtual))
+            if (TesteXequemate(JogadorAtual) || TesteXequemate(Adversaria(JogadorAtual)))
+            {
                 Terminada = true;
+                
+                if(TesteXequemate(JogadorAtual) == true)
+                    Vencedor = JogadorAtual.ToString();
+                else
+                    Vencedor = Adversaria(JogadorAtual).ToString();
+            }
+
             else
             {
                 Turno++;
@@ -264,6 +273,7 @@ namespace XadrezServer.Xadrez
                 VulneravelEnPassant = p;
             else
                 VulneravelEnPassant = null;
+
         }
 
         private void MudaJogador()
@@ -276,6 +286,9 @@ namespace XadrezServer.Xadrez
         {
             if (!EstaEmXeque(cor))
                 return false;
+
+            if (Rei(cor) == null)
+                return true;
 
             foreach (Peca x in PecasEmJogo(cor))
             {
@@ -297,9 +310,12 @@ namespace XadrezServer.Xadrez
                     }
                 }
             }
+
+
+
             return true;
         }
-       
+
 
         public void ValidarPosicaoDeOrigem(Posicao pos)
         {

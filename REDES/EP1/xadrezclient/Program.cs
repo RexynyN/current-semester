@@ -1,5 +1,5 @@
-﻿using Xadrez.Xadrez;
-using Xadrez.Jogo;
+﻿using Xadrez.Jogo;
+using Xadrez.Xadrez;
 using XadrezClient;
 
 namespace Xadrez
@@ -16,7 +16,7 @@ namespace Xadrez
             Console.Clear();
 
             int escolha = 0;
-            while(true)
+            while (true)
             {
                 try
                 {
@@ -28,13 +28,13 @@ namespace Xadrez
                     Console.WriteLine("2 - Entrar em uma partida");
                     escolha = int.Parse(Console.ReadLine());
 
-                    if(escolha > 0 || escolha <= 2)
+                    if (escolha > 0 || escolha <= 2)
                         break;
-                    else 
+                    else
                         Console.WriteLine("Opção inválida! Clique ENTER para tentar novamente!");
 
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine("Opção inválida! Clique ENTER para tentar novamente!");
                 }
@@ -42,21 +42,25 @@ namespace Xadrez
                 Console.ReadKey();
             }
 
-            try{
-                if(escolha == 1)
+            try
+            {
+                if (escolha == 1)
                 {
-                    MatchLogic match = MatchLogic.CriarPartida();
-                    
-                    if(match != null)
+                    Console.Write("Digite o seu Nickname: ");
+                    string nick = Console.ReadLine().Trim();
+
+                    MatchLogic match = MatchLogic.CriarPartida(nick);
+
+                    if (match != null)
                         Xadrez(match);
                 }
-                else if(escolha == 2)
+                else if (escolha == 2)
                 {
                     Console.Clear();
                     EntrarPartida();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Erro: " + e.Message);
                 Console.WriteLine("Pressione enter para voltar ao menu principal.");
@@ -65,16 +69,16 @@ namespace Xadrez
             }
         }
 
-        public static void  EntrarPartida()
+        public static void EntrarPartida()
         {
             string cod = "";
-            while(true)
+            while (true)
             {
                 Console.Write("Digite o código de Jogo: ");
                 cod = Console.ReadLine();
 
                 MatchLogic match = MatchLogic.EntrarPartida(cod);
-                if(match != null)
+                if (match != null)
                 {
                     Xadrez(match);
                     break;
@@ -85,22 +89,21 @@ namespace Xadrez
             }
         }
 
-        public static void Xadrez (MatchLogic partida)
+        public static void Xadrez(MatchLogic partida)
         {
-            System.Console.WriteLine("You're in :3");
-            try
+            while (!partida.Terminada())
             {
-                while (!partida.Terminada())
+                try
                 {
-                    try
+                    Console.Clear();
+                    Tela.ImprimirPartida(partida);
+                    Console.WriteLine();
+
+                    if (partida.JogadorAtual == partida.Player)
                     {
-                        Console.Clear();
-                        Tela.ImprimirPartida(partida);
-                        Console.WriteLine();
-                        Console.WriteLine("Sua vez!");
                         Console.Write("Origem: ");
                         Posicao origem = Tela.LerPosicaoXadrez().ToPosicao();
-                        
+
                         bool[,] posicoes = partida.MovimentosPossiveis(origem);
                         Console.Clear();
                         Tela.ImprimirTabuleiro(partida.Tabuleiro, posicoes);
@@ -111,33 +114,57 @@ namespace Xadrez
                         Posicao destino = Tela.LerPosicaoXadrez().ToPosicao();
 
                         partida.RealizaJogada(origem, destino);
-                        Tela.ImprimirTabuleiro(partida.Tabuleiro);
+                        Console.Clear();
+                        Tela.ImprimirPartida(partida);
+                    }
+
+                    if (!partida.Terminada())
+                    {
                         Console.WriteLine("Esperando o turno do oponente!");
-                        partida.EsperarTurno(); // PseudoCódigo para implementar uma espera ocupada até o próximo turno
+                        partida.EsperarTurno();
                     }
-                    catch(TabuleiroException e )
+                    else
                     {
-                        Console.WriteLine(e.Message);
-                        Console.ReadKey();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Houve um erro na partida\nMensagem:" + e.Message);
-                        Console.WriteLine("" + e.StackTrace);
-                        Console.ReadKey();
+                        Console.WriteLine("Clique ENTER para ver suas estatísticas!");
                     }
                 }
+                catch (TabuleiroException e)
+                {
+                    Console.WriteLine(e.Message);
+                    Console.ReadKey();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Houve um erro na partida\nMensagem:" + e.Message);
+                    Console.WriteLine("" + e.StackTrace);
+                    Console.ReadKey();
+                }
+
+                Chat(partida);
             }
-            catch(TabuleiroException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.ReadKey();
-            }
-            // catch (Exception e)
-            // {
-            //     Console.WriteLine(e.Message);
-            // }
         }
 
+        public static void Chat (MatchLogic partida)
+        {
+            string message = "";
+            while(message != "!sair" || message != "!exit")
+            {
+                Tela.ImprimirMensagens(partida.Mensagens());
+                Console.Write("Mensagem (!sair/!exit para sair): ");
+                message = Console.ReadLine().Trim();
+                partida.MandarMensagem(message);
+                if(message == "!sair" || message != "!exit") // Colocar esse código no metodo de cima ^
+                    return;
+            }
         }
+
+        public static void Estatisticas (MatchLogic partida)
+        {
+            Tela.ImprimirEstatisticas(partida.Estatisticas());
+
+            Console.ReadKey();
+            Console.ReadKey();
+        }
+    }
+
 }
