@@ -1,6 +1,6 @@
 namespace XadrezServer.Requests
 {
-    class BusyWait
+    class Partida
     {
         public string MatchId { get; set; }
         public string Player { get; set; }

@@ -13,6 +13,7 @@ namespace XadrezClient.Response
 
         public string[,]? MatrizTabuleiro()
         {
+            try{
             string[,] possiveis = new string[8, 8];
             for (int i = 0; i < 8; i++)
             {
@@ -23,6 +24,11 @@ namespace XadrezClient.Response
             }
 
             return possiveis;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

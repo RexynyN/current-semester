@@ -1,11 +1,11 @@
 ﻿using Xadrez.Jogo;
-using Xadrez.Xadrez;
-using XadrezClient;
 
-namespace Xadrez
+namespace XadrezClient
 {
     class Program
     {
+        public static bool ThreadHandler = true;
+
         static void Main(string[] args)
         {
             StartMenu(false);
@@ -13,22 +13,25 @@ namespace Xadrez
 
         static void StartMenu(bool error)
         {
-            Console.Clear();
 
             int escolha = 0;
             while (true)
             {
                 try
                 {
-                    if (error)
-                        Printer.Error("Houve um erro ao jogar, tente novamente.");
+                    Console.Clear();
 
-                    Console.WriteLine("SUPER XADREZ MULTIPLAYER DA 04 EACH:");
+                    if (error)
+                        Printer.Error("Houve um erro ao jogar, tente novamente.\n");
+
+                    Printer.Green("SUPER XADREZ MULTIPLAYER DA 04 EACH (EPIC EDITION):\n");
                     Console.WriteLine("1 - Criar uma partida");
                     Console.WriteLine("2 - Entrar em uma partida");
+                    Console.WriteLine("3 - Sair do jogo");
+                    Printer.BlackSingle("\nSua escolha: ");
                     escolha = int.Parse(Console.ReadLine());
 
-                    if (escolha > 0 || escolha <= 2)
+                    if (escolha > 0 && escolha <= 3)
                         break;
                     else
                         Console.WriteLine("Opção inválida! Clique ENTER para tentar novamente!");
@@ -46,10 +49,7 @@ namespace Xadrez
             {
                 if (escolha == 1)
                 {
-                    Console.Write("Digite o seu Nickname: ");
-                    string nick = Console.ReadLine().Trim();
-
-                    MatchLogic match = MatchLogic.CriarPartida(nick);
+                    MatchLogic match = MatchLogic.CriarPartida();
 
                     if (match != null)
                         Xadrez(match);
@@ -62,8 +62,9 @@ namespace Xadrez
             }
             catch (Exception e)
             {
-                Console.WriteLine("Erro: " + e.Message);
-                Console.WriteLine("Pressione enter para voltar ao menu principal.");
+                Printer.Error("Erro: " + e.Message);
+                Printer.Error(e.StackTrace);
+                Printer.Black("Pressione enter para voltar ao menu principal.");
                 Console.ReadKey();
                 StartMenu(true);
             }
@@ -97,10 +98,10 @@ namespace Xadrez
                 {
                     Console.Clear();
                     Tela.ImprimirPartida(partida);
-                    Console.WriteLine();
 
                     if (partida.JogadorAtual == partida.Player)
                     {
+                        Printer.Green("\nSua vez!");
                         Console.Write("Origem: ");
                         Posicao origem = Tela.LerPosicaoXadrez().ToPosicao();
 
@@ -109,7 +110,6 @@ namespace Xadrez
                         Tela.ImprimirTabuleiro(partida.Tabuleiro, posicoes);
 
                         Console.WriteLine();
-                        Console.WriteLine("Sua vez!");
                         Console.Write("Destino: ");
                         Posicao destino = Tela.LerPosicaoXadrez().ToPosicao();
 
@@ -120,12 +120,8 @@ namespace Xadrez
 
                     if (!partida.Terminada())
                     {
-                        Console.WriteLine("Esperando o turno do oponente!");
+                        Printer.Blue("\nEsperando o turno do oponente!");
                         partida.EsperarTurno();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Clique ENTER para ver suas estatísticas!");
                     }
                 }
                 catch (TabuleiroException e)
@@ -139,31 +135,62 @@ namespace Xadrez
                     Console.WriteLine("" + e.StackTrace);
                     Console.ReadKey();
                 }
-
-                Chat(partida);
             }
+
+            Console.Clear();
+            Tela.ImprimirTabuleiro(partida.Tabuleiro);
+            Console.WriteLine();
+            if(partida.Vencedor != partida.Player)
+                Printer.Error("Fim de Jogo! Dessa vez você não foi campeão :(");
+            else 
+                Printer.Green("Fim de Jogo! A vitória é sua! <|º_º|>");
+
+            Console.WriteLine("Clique ENTER para Chat Pós-Jogo!");
+            Console.ReadKey();
+
+            Chat(partida);
         }
 
         public static void Chat (MatchLogic partida)
         {
+            Console.Clear();
+            Printer.Green("Chat Pós-Jogo (!sair/!exit para sair) ");
+            
             string message = "";
-            while(message != "!sair" || message != "!exit")
+            ThreadHandler = true;
+            Thread mThread = new Thread(partida.MessageThread);
+            mThread.Start();
+
+            while(true)
             {
-                Tela.ImprimirMensagens(partida.Mensagens());
-                Console.Write("Mensagem (!sair/!exit para sair): ");
                 message = Console.ReadLine().Trim();
+                
+                if(message == "!sair" || message == "!exit")
+                    break;
+
                 partida.MandarMensagem(message);
-                if(message == "!sair" || message != "!exit") // Colocar esse código no metodo de cima ^
-                    return;
+                Console.SetCursorPosition(0, Console.CursorTop-1);
+                Printer.Black("Você: " + message);
             }
+
+            ThreadHandler = false;
+            partida.MandarMensagem("<Seu adversário saiu do chat>");
+
+            Estatisticas(partida);
         }
 
         public static void Estatisticas (MatchLogic partida)
         {
+            Console.Clear();
+            Printer.Green("Estatíticas da Partida: " + partida.MatchId);
+            Console.WriteLine();
+
             Tela.ImprimirEstatisticas(partida.Estatisticas());
 
+            Console.WriteLine("\nPressione ENTER duas vezes para continuar.");
             Console.ReadKey();
             Console.ReadKey();
+            StartMenu(false);
         }
     }
 

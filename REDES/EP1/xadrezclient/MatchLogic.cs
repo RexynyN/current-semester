@@ -18,6 +18,8 @@ namespace XadrezClient
         public string PegasPretas { get; private set; }
         public bool PartidaTerminada { get; private set; }
 
+
+
         private TCPSender Connection;
 
         public MatchLogic(Partida args)
@@ -33,7 +35,7 @@ namespace XadrezClient
             Connection = new TCPSender();
         }
 
-        public bool Terminada() // 
+        public bool Terminada() 
         {
             string request = Util.CreateRequest("Terminada", new
             {
@@ -64,7 +66,6 @@ namespace XadrezClient
             if (response.Status == "NOK")
                 throw new TabuleiroException(response.Message);
 
-            System.Console.WriteLine(response.Posicoes);
             return response.MatrizPossiveis();
         }
 
@@ -151,6 +152,61 @@ namespace XadrezClient
             MatchLogic puppy = new MatchLogic(response);
 
             return puppy;
+        }
+
+        public void MessageThread()
+        {
+            string request = Util.CreateRequest("PegarMensagem", new
+                {
+                    MatchId = MatchId,
+                    Player = Player
+                });
+            
+            while (Program.ThreadHandler)
+            {
+                Thread.Sleep(1000);
+
+                Messenger? message = JsonSerializer.Deserialize<Messenger>(Connection.SendRequest(request));
+
+                if (message.Message == "OK")
+                {
+                    foreach(var item in message.Content)
+                        Console.WriteLine("Adversário: " + item);
+                }
+            }
+        }
+
+        public List<string> Estatisticas()
+        {
+            string request = Util.CreateRequest("PegarEstatisticas", new
+            {
+                MatchId = MatchId,
+                Player = Player,
+            });
+
+            Stats? response = JsonSerializer.Deserialize<Stats>(Connection.SendRequest(request));
+
+            if (response.Status == "NOK")
+                throw new Exception("Não foi possível pegar as estatísticas");
+
+            return new List<string>(response.Estatisticas);
+        }
+
+        public BaseResponse MandarMensagem(string message)
+        {
+            if(message == "!sair" || message == "!exit") // Colocar esse código no metodo de cima ^
+                return null;
+            
+            string request = Util.CreateRequest("PostarMensagem", new
+                {
+                    MatchId = MatchId,
+                    Player = Player,
+                    Message = message
+                });
+            
+            BaseResponse? response = JsonSerializer.Deserialize<BaseResponse>(Connection.SendRequest(request));
+
+            return response;
         }
     }
 }

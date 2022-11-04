@@ -28,15 +28,16 @@ namespace XadrezServer
                 String? data = null;
                 String? response = null;
 
+                System.Console.WriteLine("Servidor Rodando!");
                 // Enter the listening loop.
                 while (true)
                 {
-                    Console.Write("Waiting for a connection... ");
+                    // Console.Write("Waiting for a connection... ");
 
                     // Perform a blocking call to accept requests.
                     // You could also use server.AcceptSocket() here.
                     TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("Connected!"); 
+                    // Console.WriteLine("Connected!"); 
                     data = null;
 
                     // Get a stream object for reading and writing
@@ -48,7 +49,7 @@ namespace XadrezServer
                     {
                         // Translate data bytes to a ASCII string.
                         data = System.Text.Encoding.UTF8.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
+                        // Console.WriteLine("Received: {0}", data);
 
                         string[] datas = data.Split("$");
 
@@ -66,7 +67,7 @@ namespace XadrezServer
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", response);
+                        // Console.WriteLine("Sent: {0}", response);
 
                     }
 

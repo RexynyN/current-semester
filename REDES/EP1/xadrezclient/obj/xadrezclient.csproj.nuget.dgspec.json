@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Desktop\\current-semester\\redes\\ep1\\xadrezclient\\xadrezclient.csproj": {}
+    "C:\\Users\\Admin\\desktop\\current-semester\\redes\\ep1\\xadrezclient\\xadrezclient.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Desktop\\current-semester\\redes\\ep1\\xadrezclient\\xadrezclient.csproj": {
+    "C:\\Users\\Admin\\desktop\\current-semester\\redes\\ep1\\xadrezclient\\xadrezclient.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\current-semester\\redes\\ep1\\xadrezclient\\xadrezclient.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\desktop\\current-semester\\redes\\ep1\\xadrezclient\\xadrezclient.csproj",
         "projectName": "xadrezclient",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\current-semester\\redes\\ep1\\xadrezclient\\xadrezclient.csproj",
+        "projectPath": "C:\\Users\\Admin\\desktop\\current-semester\\redes\\ep1\\xadrezclient\\xadrezclient.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\current-semester\\redes\\ep1\\xadrezclient\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\desktop\\current-semester\\redes\\ep1\\xadrezclient\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"

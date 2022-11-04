@@ -10,7 +10,7 @@ namespace XadrezServer
     {
         public static string HandleAction(string action, string content)
         {
-            Console.WriteLine(action);
+            // Console.WriteLine(action);
             switch (action)
             {
                 // Matchmaking 
@@ -27,14 +27,23 @@ namespace XadrezServer
                 case "ACTION=RealizaJogada":
                     return RealizaJogada(content);
 
+                // Controle
                 case "ACTION=EsperarTurno":
                     return EsperarTurno(content);
 
                 case "ACTION=Terminada":
                     return Terminada(content);
 
+                // Chat
+                case "ACTION=PostarMensagem":
+                    return PostarMensagem(content);
+
+                case "ACTION=PegarMensagem":
+                    return PegarMensagem(content);
+
+                // Estatisticas
                 case "ACTION=PegarEstatisticas":
-                    return "";
+                    return PegarEstatisticas(content);
 
                 default:
                     var response = new { Status = "NOK", Message = "BAD REQUEST" };
@@ -42,18 +51,63 @@ namespace XadrezServer
             }
         }
 
-        private static string Terminada(string content)
+        private static string PostarMensagem(string content)
         {
-            BusyWait? args = JsonSerializer.Deserialize<BusyWait>(content);
+            Messagen? args = JsonSerializer.Deserialize<Messagen>(content);
 
             PartidaXadrez match = FindMatch(args?.MatchId);
             if (match == null)
                 return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!" });
 
-            if(match.Terminada)
+            match.Chat.SetMessage(args.Player, args.Message);
+
+            return JsonSerializer.Serialize(new { Status = "OK", Message = "OK" });
+        }
+
+        private static string PegarMensagem(string content)
+        {
+            Partida? args = JsonSerializer.Deserialize<Partida>(content);
+
+            PartidaXadrez match = FindMatch(args?.MatchId);
+            if (match == null)
+                return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!" });
+
+            string[] messages = match.Chat.GetMessages(args.Player);
+
+            if (messages.Length <= 0)
+                return JsonSerializer.Serialize(new { Status = "OK", Message = "NOK" });
+
+            return JsonSerializer.Serialize(new { Status = "OK", Message = "OK", Content = messages });
+        }
+
+        private static string PegarEstatisticas(string content)
+        {
+            Partida? args = JsonSerializer.Deserialize<Partida>(content);
+
+            PartidaXadrez match = FindMatch(args?.MatchId);
+            if (match == null)
+                return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!" });
+
+            if (!match.Terminada)
+                return JsonSerializer.Serialize(new { Status = "NOK", Message = "A partida não acabou!" });
+
+            string[] stats = match.Estatisticas(args.Player).GerarEstatisticas();
+
+            return JsonSerializer.Serialize(new { Status = "OK", Message = "OK", Estatisticas = stats });
+        }
+
+        private static string Terminada(string content)
+        {
+            Partida? args = JsonSerializer.Deserialize<Partida>(content);
+
+            PartidaXadrez match = FindMatch(args?.MatchId);
+            if (match == null)
+                return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!" });
+
+            if (match.Terminada)
                 return JsonSerializer.Serialize(new { Status = "OK", Message = "OK", Vencedor = match.Vencedor });
 
-            return JsonSerializer.Serialize(new { Status = "OK", Message = "NOK", Vencedor = ""});
+            return JsonSerializer.Serialize(new { Status = "OK", Message = "NOK", Vencedor = "" });
         }
 
         private static string CriarPartida()
@@ -62,12 +116,20 @@ namespace XadrezServer
             PartidaXadrez match = new PartidaXadrez(Utils.CreateId());
             Globals.Partidas.Add(match);
 
-            var response = new { Status = "OK", MatchId = match.Id, Player = "Branca", Tabuleiro = match.Tabuleiro(),
-                                                    Xeque = match.Xeque, Turno = match.Turno,
-                                                    JogadorAtual = match.JogadorAtual.ToString(),
-                                                    PegasPretas = match.PecasPegas(Cor.Preta),
-                                                    PegasBrancas = match.PecasPegas(Cor.Branca)};
+            var response = new
+            {
+                Status = "OK",
+                MatchId = match.Id,
+                Player = "Branca",
+                Tabuleiro = match.Tabuleiro(),
+                Xeque = match.Xeque,
+                Turno = match.Turno,
+                JogadorAtual = match.JogadorAtual.ToString(),
+                PegasPretas = match.PecasPegas(Cor.Preta),
+                PegasBrancas = match.PecasPegas(Cor.Branca)
+            };
 
+            System.Console.WriteLine("Partida criada! ID: " + match.Id);
             return JsonSerializer.Serialize(response);
         }
 
@@ -80,12 +142,20 @@ namespace XadrezServer
             if (match == null)
                 return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!" });
 
-            var response = new { Status = "OK", MatchId = match.Id, Player = "Preta", Tabuleiro = match.Tabuleiro(),
-                                        Xeque = match.Xeque, Turno = match.Turno,
-                                        JogadorAtual = match.JogadorAtual.ToString(),
-                                        PegasPretas = match.PecasPegas(Cor.Preta),
-                                        PegasBrancas = match.PecasPegas(Cor.Branca)};
+            var response = new
+            {
+                Status = "OK",
+                MatchId = match.Id,
+                Player = "Preta",
+                Tabuleiro = match.Tabuleiro(),
+                Xeque = match.Xeque,
+                Turno = match.Turno,
+                JogadorAtual = match.JogadorAtual.ToString(),
+                PegasPretas = match.PecasPegas(Cor.Preta),
+                PegasBrancas = match.PecasPegas(Cor.Branca)
+            };
 
+            System.Console.WriteLine("Jogador entrou na partida de ID " + match.Id);
             return JsonSerializer.Serialize(response);
         }
 
@@ -98,7 +168,7 @@ namespace XadrezServer
             if (match == null)
                 return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!" });
 
-            if(args.Player != match.JogadorAtual.ToString())
+            if (args.Player != match.JogadorAtual.ToString())
                 return JsonSerializer.Serialize(new { Status = "NOK", Message = "Não é sua vez!" });
 
             Posicao origem = args.Posicao();
@@ -108,7 +178,7 @@ namespace XadrezServer
                 match.ValidarPosicaoDeOrigem(origem);
                 bool[,] posicoes = match.Tab.Peca(origem).MovimentosPossiveis();
 
-                bool [][] possiveis = ToJaggedArray(posicoes);
+                bool[][] possiveis = ToJaggedArray(posicoes);
 
                 return JsonSerializer.Serialize(new { Status = "OK", Posicoes = possiveis });
             }
@@ -120,13 +190,13 @@ namespace XadrezServer
 
         private static bool[][] ToJaggedArray(bool[,] posicoes)
         {
-            bool [] [] possiveis = new bool [8][];
+            bool[][] possiveis = new bool[8][];
             for (int i = 0; i < 8; i++)
             {
-                bool [] aux = new bool [8];
+                bool[] aux = new bool[8];
                 for (int j = 0; j < 8; j++)
                 {
-                    aux[j] = posicoes[i,j];
+                    aux[j] = posicoes[i, j];
                 }
                 possiveis[i] = aux;
             }
@@ -142,10 +212,7 @@ namespace XadrezServer
             if (match == null)
                 return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!" });
 
-
-            System.Console.WriteLine(match.JogadorAtual + "  -  " + args?.Player);
-            
-            if(args?.Player != match.JogadorAtual.ToString())
+            if (args?.Player != match.JogadorAtual.ToString())
                 return JsonSerializer.Serialize(new { Status = "NOK", Message = "Não é a sua vez!" });
 
             try
@@ -154,18 +221,28 @@ namespace XadrezServer
 
                 match.RealizaJogada(args.PosicaoOrigem(), args.PosicaoDestino());
 
-                string [][] tabuleiro = match.Tabuleiro();
+                string[][] tabuleiro = match.Tabuleiro();
 
-                if(match.Terminada)
-                    return JsonSerializer.Serialize(new { Status = "OK", Terminada = true, 
-                        Message = $"{match.JogadorAtual} ganhou a partida!", Tabuleiro = match.Tabuleiro()});
+                if (match.Terminada)
+                    return JsonSerializer.Serialize(new
+                    {
+                        Status = "OK",
+                        Terminada = true,
+                        Message = $"{match.JogadorAtual} ganhou a partida!",
+                        Tabuleiro = match.Tabuleiro()
+                    });
 
-                return JsonSerializer.Serialize(new { Status = "OK", Message = "TODO",  Tabuleiro = match.Tabuleiro(), 
-                                                    Xeque = match.Xeque, Turno = match.Turno,
-                                                    JogadorAtual = match.JogadorAtual.ToString(),
-                                                    PegasPretas = match.PecasPegas(Cor.Preta),
-                                                    PegasBrancas = match.PecasPegas(Cor.Branca)
-                                                });
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "OK",
+                    Message = "TODO",
+                    Tabuleiro = match.Tabuleiro(),
+                    Xeque = match.Xeque,
+                    Turno = match.Turno,
+                    JogadorAtual = match.JogadorAtual.ToString(),
+                    PegasPretas = match.PecasPegas(Cor.Preta),
+                    PegasBrancas = match.PecasPegas(Cor.Branca)
+                });
             }
             catch (TabuleiroException e)
             {
@@ -175,30 +252,49 @@ namespace XadrezServer
 
         private static string EsperarTurno(string content)
         {
-            BusyWait? args = JsonSerializer.Deserialize<BusyWait>(content);
+            Partida? args = JsonSerializer.Deserialize<Partida>(content);
 
             PartidaXadrez match = FindMatch(args?.MatchId);
             if (match == null)
                 return JsonSerializer.Serialize(new { Status = "NOK", Message = "Partida não encontrada!" });
 
-            if(match.JogadorAtual.ToString() != args.Player)
-                return JsonSerializer.Serialize(new { Status = "OK", Message = "NOK",
-                                            JogadorAtual = match.JogadorAtual.ToString() });
+            if (match.Terminada)
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "OK",
+                    Message = "OK",
+                    Tabuleiro = match.Tabuleiro(),
+                    JogadorAtual = match.JogadorAtual.ToString()
+                });
 
-            return JsonSerializer.Serialize(new { Status = "OK", Message = "OK", Tabuleiro = match.Tabuleiro(), 
-                                                    Xeque = match.Xeque, Turno = match.Turno,
-                                                    JogadorAtual = match.JogadorAtual.ToString(),
-                                                    PegasPretas = match.PecasPegas(Cor.Preta),
-                                                    PegasBrancas = match.PecasPegas(Cor.Branca)}
-                                                    );
+            if (match.JogadorAtual.ToString() != args.Player)
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "OK",
+                    Message = "NOK",
+                    JogadorAtual = match.JogadorAtual.ToString()
+                });
+
+            return JsonSerializer.Serialize(new
+            {
+                Status = "OK",
+                Message = "OK",
+                Tabuleiro = match.Tabuleiro(),
+                Xeque = match.Xeque,
+                Turno = match.Turno,
+                JogadorAtual = match.JogadorAtual.ToString(),
+                PegasPretas = match.PecasPegas(Cor.Preta),
+                PegasBrancas = match.PecasPegas(Cor.Branca)
+            });
         }
 
         private static PartidaXadrez FindMatch(string? id)
         {
-            try{
+            try
+            {
                 return Globals.Partidas.Single(s => s.Id == id);
             }
-            catch(InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 return null;
             }

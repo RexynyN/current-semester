@@ -15,8 +15,9 @@ namespace XadrezServer.Xadrez
         public string Vencedor { get; private set; }
         private HashSet<Peca> Pecas = new HashSet<Peca>();
         private HashSet<Peca> Capturadas = new HashSet<Peca>();
-        private Estatisticas statBranca = new Estatisticas();
-        private Estatisticas statPreta = new Estatisticas();
+        private Estatisticas StatBranca = new Estatisticas();
+        private Estatisticas StatPreta = new Estatisticas();
+        public Messenger Chat = new Messenger();
 
         public PartidaXadrez(string id)
         {
@@ -28,6 +29,22 @@ namespace XadrezServer.Xadrez
             ColocarPecas();
             Xeque = false;
             VulneravelEnPassant = null;
+            DateTime Comeco = DateTime.Now;
+            StatBranca.Comeco = Comeco;
+            StatPreta.Comeco = Comeco;
+        }
+
+        public Estatisticas Estatisticas(string cor)
+        {
+            if(cor == Cor.Preta.ToString())
+                return StatPreta;
+            else
+                return StatBranca;
+        }
+
+        public Estatisticas Estatisticas(Cor cor)
+        {
+            return Estatisticas(cor.ToString());
         }
 
         private Cor Adversaria(Cor cor)
@@ -40,7 +57,6 @@ namespace XadrezServer.Xadrez
 
         public string[][] Tabuleiro()
         {
-            // string [,] tabuleiro = new string[8,8];
             string[][] tabuleiro = new string[8][];
             for (int i = 0; i < 8; i++)
             {
@@ -64,6 +80,8 @@ namespace XadrezServer.Xadrez
             return tabuleiro;
         }
 
+
+        
         private Peca Rei(Cor cor)
         {
             foreach (Peca x in PecasEmJogo(cor))
@@ -85,6 +103,11 @@ namespace XadrezServer.Xadrez
             conjunto += "]";
 
             return conjunto;
+        }
+
+        public int NumPecasPegas(Cor player)
+        {
+            return PecasCapturadas(Adversaria(player)).Count;
         }
 
         public bool EstaEmXeque(Cor cor)
@@ -115,8 +138,10 @@ namespace XadrezServer.Xadrez
             Peca pecaCapturada = Tab.RetirarPeca(destino);
             Tab.ColocarPeca(p, destino);
             if (pecaCapturada != null)
+            {
+                System.Console.WriteLine(pecaCapturada.Cor);
                 Capturadas.Add(pecaCapturada);
-
+            }
             // #jogadaEspecial roquePequeno
             if (p is Rei && destino.Coluna == origem.Coluna + 2)
             {
@@ -231,6 +256,12 @@ namespace XadrezServer.Xadrez
         public void RealizaJogada(Posicao origem, Posicao destino)
         {
             Peca pecaCapturada = ExecutaMovimento(origem, destino);
+            Estatisticas(JogadorAtual).Movimentos++;
+            Estatisticas(JogadorAtual).PecasPegas = PecasPegas(Adversaria(JogadorAtual));
+            Estatisticas(Adversaria(JogadorAtual)).PecasPerdidas = PecasPegas(Adversaria(JogadorAtual));
+            Estatisticas(JogadorAtual).NumPecas = NumPecasPegas(JogadorAtual);
+            
+
             // if (EstaEmXeque(JogadorAtual))
             // {
             //     DesfazMovimento(origem, destino, pecaCapturada);
@@ -252,18 +283,27 @@ namespace XadrezServer.Xadrez
 
             Xeque = EstaEmXeque(JogadorAtual) || EstaEmXeque(Adversaria(JogadorAtual));
 
+            // Acabou a partida aqui
             if (TesteXequemate(JogadorAtual) || TesteXequemate(Adversaria(JogadorAtual)))
             {
+                DateTime now = DateTime.Now;
+                StatBranca.Termino = now;
+                StatPreta.Termino = now;
                 Terminada = true;
-                
+
                 if(TesteXequemate(JogadorAtual) == true)
-                    Vencedor = JogadorAtual.ToString();
-                else
                     Vencedor = Adversaria(JogadorAtual).ToString();
+                else
+                    Vencedor = JogadorAtual.ToString();
+                
+                StatBranca.Vencedor = Vencedor;
+                StatPreta.Vencedor = Vencedor;
             }
 
             else
             {
+                StatBranca.Turnos++;
+                StatPreta.Turnos++;
                 Turno++;
                 MudaJogador();
             }
@@ -273,7 +313,6 @@ namespace XadrezServer.Xadrez
                 VulneravelEnPassant = p;
             else
                 VulneravelEnPassant = null;
-
         }
 
         private void MudaJogador()
@@ -311,11 +350,8 @@ namespace XadrezServer.Xadrez
                 }
             }
 
-
-
             return true;
         }
-
 
         public void ValidarPosicaoDeOrigem(Posicao pos)
         {

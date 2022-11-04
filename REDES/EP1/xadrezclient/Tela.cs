@@ -1,7 +1,6 @@
 ﻿using Xadrez.Xadrez;
-using XadrezClient;
 
-namespace Xadrez
+namespace XadrezClient
 {
     class Tela
     {
@@ -104,6 +103,20 @@ namespace Xadrez
             char coluna = s[0];
             int linha = int.Parse(s[1] + "");
             return new PosicaoXadrez(coluna, linha);
+        }
+
+        public static void ImprimirEstatisticas(List<string> list)
+        {
+            int glob = 1;
+            foreach(var stat in list)
+            {
+                if(glob % 2 == 0)
+                    Console.WriteLine(stat);
+                else
+                    Printer.Black(stat);
+
+                glob++;
+            }
         }
     }
 }

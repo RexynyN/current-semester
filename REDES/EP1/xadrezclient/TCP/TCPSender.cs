@@ -33,7 +33,7 @@ namespace XadrezClient.TCP
 
                 stream.Write(data, 0, data.Length);
 
-                Console.WriteLine("Sent: {0}", package);
+                // Console.WriteLine("Sent: {0}", package);
 
                 data = new Byte[32768];
 
@@ -51,7 +51,7 @@ namespace XadrezClient.TCP
                 }
                 while(stream.DataAvailable);
 
-                Console.WriteLine("Received: {0}",  message.ToString());
+                // Console.WriteLine("Received: {0}",  message.ToString());
 
 
                 return message.ToString();
