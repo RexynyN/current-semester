@@ -23,14 +23,35 @@ class PartRepository:
         else:
             return None
 
-    def repo_part(self):
-        pass
+    def repo_part(self, id):
+        return self.name
 
-    def part_type(self):
-        pass
-
-    def subparts_info(self):
-        pass
+    def part_type(self, id):
+        if not id in self.parts.keys():
+            return None
+        part = self.parts[id]
+        return "primitive" if part.subparts == [] else "aggregated"
+    
+    # Samsung S6 Lite        
+    def subparts_info(self, id):
+        if not id in self.parts.keys():
+            return None
+        part = self.parts[id]
+        for key, value in self.parts.items():
+            # TODO
+            pass
 
     def list_subparts(self):
-        pass
+        if not id in self.parts.keys():
+            return None
+        
+        return self.parts[id].subparts
+    
+    def create_part(self, data: dict):
+        if not ["id", "name", "desc", "subparts"] in data.keys():
+            return None
+        
+        new_part = Part(data["id"], data['name'], data['desc'], data['subparts'])
+
+        self.parts[new_part.id] = new_part
+        return new_part

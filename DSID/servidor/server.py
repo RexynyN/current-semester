@@ -1,4 +1,5 @@
 import sys
+from part_repository import PartRepository
 from xmlrpc.server import SimpleXMLRPCServer
 
 # SERVER CONFIGS
@@ -9,16 +10,13 @@ def main(args):
     print('\tParts Server')
     print("Esperando por conexões...")
 
-    # Lista de Partes (banco de dados)
-    parts = []
+    repo = PartRepository(args[0])
 
     # Cria uma base de dados mock
-    bootstrap_parts()
+    bootstrap_parts(repo)
 
-    def agenda():
-        print("Clog the toilet")
 
-    servidor.register_function(agenda, "agenda")
+    servidor.register_instance(repo)
     servidor.serve_forever()
 
 
