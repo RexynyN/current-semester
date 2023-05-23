@@ -9,6 +9,8 @@ class ActionConsole:
     def __switch_function(self, cmd:str) -> str:
         verb = cmd.split()[0] 
         match verb:
+            case "connect":
+                return
             case "bind":
                 return 
             

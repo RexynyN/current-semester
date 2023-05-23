@@ -11,13 +11,15 @@ class PartRepository:
         return (self.name, self.length)
 
     def insert_part(self, part:Part):
-        '''Listando as pecas no repositorio'''
+        '''Listando as peças no repositorio'''
         self.parts[part.get_id()] = part
         
     def list_parts(self):
+        '''Listando as peças no repositório'''
         return self.parts.values()
 
     def search_part(self, key):
+        '''Buscando uma peça (por código de peça) no repositório'''
         if key in self.parts.keys:
             return self.parts[key]
         else:
@@ -32,7 +34,6 @@ class PartRepository:
         part = self.parts[id]
         return "primitive" if part.subparts == [] else "aggregated"
     
-    # Samsung S6 Lite        
     def subparts_info(self, id):
         if not id in self.parts.keys():
             return None
@@ -42,16 +43,22 @@ class PartRepository:
             pass
 
     def list_subparts(self):
+        '''Listando suas sub-peças.'''
         if not id in self.parts.keys():
             return None
         
         return self.parts[id].subparts
     
-    def create_part(self, data: dict):
+    def create_part(self, data: dict) -> Part:
+        '''Adicionando ao repositório novas peças (primitivas ou agregadas)'''
         if not ["id", "name", "desc", "subparts"] in data.keys():
             return None
         
+        id_ = self.create_id()
         new_part = Part(data["id"], data['name'], data['desc'], data['subparts'])
 
         self.parts[new_part.id] = new_part
         return new_part
+    
+    def hello_world(self):
+        return "Hello World"

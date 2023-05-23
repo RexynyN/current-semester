@@ -4,16 +4,16 @@ from xmlrpc.server import SimpleXMLRPCServer
 
 # SERVER CONFIGS
 IP = '127.0.0.1'
-
+PORTA = 420
 def main(args):
     servidor = SimpleXMLRPCServer((IP, PORTA))
     print('\tParts Server')
     print("Esperando por conexões...")
 
-    repo = PartRepository(args[0])
+    repo = PartRepository("tester")
 
-    # Cria uma base de dados mock
-    bootstrap_parts(repo)
+    # # Cria uma base de dados mock
+    # bootstrap_parts(repo)
 
 
     servidor.register_instance(repo)
