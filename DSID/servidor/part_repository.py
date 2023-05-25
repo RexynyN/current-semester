@@ -1,3 +1,4 @@
+import random
 from part import Part
 
 class PartRepository:
@@ -16,31 +17,25 @@ class PartRepository:
         
     def list_parts(self):
         '''Listando as peças no repositório'''
-        return self.parts.values()
+        return list(self.parts.values())
 
     def search_part(self, key):
         '''Buscando uma peça (por código de peça) no repositório'''
-        if key in self.parts.keys:
-            return self.parts[key]
-        else:
-            return None
-
-    def repo_part(self, id):
-        return self.name
-
+        return self.parts.get(key, None)
+    
     def part_type(self, id):
         if not id in self.parts.keys():
             return None
         part = self.parts[id]
         return "primitive" if part.subparts == [] else "aggregated"
     
-    def subparts_info(self, id):
-        if not id in self.parts.keys():
+    def add_subpart(self, id_part, id_subpart, n_parts):
+        if not id_part in self.parts.keys():
             return None
-        part = self.parts[id]
-        for key, value in self.parts.items():
-            # TODO
-            pass
+        
+        super_tuple = (id_subpart, n_parts)
+        self.parts[id_part].subparts.append(super_tuple)
+        return self.parts[id_part]
 
     def list_subparts(self):
         '''Listando suas sub-peças.'''
@@ -49,16 +44,19 @@ class PartRepository:
         
         return self.parts[id].subparts
     
-    def create_part(self, data: dict) -> Part:
-        '''Adicionando ao repositório novas peças (primitivas ou agregadas)'''
-        if not ["id", "name", "desc", "subparts"] in data.keys():
+    def clear_subparts(self, id):
+        if not id in self.parts.keys():
             return None
         
-        id_ = self.create_id()
-        new_part = Part(data["id"], data['name'], data['desc'], data['subparts'])
+        self.parts[id].subparts = []
 
+        return self.parts[id]
+
+    def create_part(self, name, desc) -> Part:
+        '''Adicionando ao repositório novas peças (primitivas ou agregadas)'''
+        id = str(random.randint(100,99999))
+
+        new_part = Part(id, name, desc, [])
         self.parts[new_part.id] = new_part
+        self.length += 1
         return new_part
-    
-    def hello_world(self):
-        return "Hello World"
