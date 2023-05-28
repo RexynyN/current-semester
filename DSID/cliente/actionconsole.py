@@ -1,18 +1,22 @@
+import json
 import xmlrpc.client as xc
-from pprint import pprint
-
-# bind 127.0.0.1 420
+from colors import fprint, okprint
+from os.path import join
 
 class ActionConsole:
     def __init__(self) -> None:
         self.connection = None
         self.part = None
-        self.subpart = None
+        self.subpart = []
 
+        with open(join("servers.json"), 'r', encoding="utf-8") as f:
+            self.servers = json.load(f)        
+
+ 
     def run_command(self, command:str) -> str:
-        cmd_free = ["bind", "help", "quit"]
+        cmd_free = ["servers", "bind", "help", "quit"]
         if command.split()[0] not in cmd_free and self.connection == None:
-            print("Não há uma conexão com um repositório para executar esse comando!")
+            fprint("Não há uma conexão com um repositório para executar esse comando!")
             return "failed"
          
         return self.__switch_function(command)
@@ -22,24 +26,36 @@ class ActionConsole:
         args = cmd.split()[1:]
         
         match verb:
+            case "servers":
+                for s in self.servers:
+                    print(s['name'])
+
+                return "fulfilled"
+
             case "bind":
-                if ":" in args[0]:
-                    con_string = f"http://{args[0]}/"
-                elif len(args) > 1:
-                    con_string = f"http://{args[0]}:{args[1]}/"
+                if len(args) < 1:
+                    fprint("Não há um nome para conectar!")
+                    return "failed"
+                
+                con_string = self.lookup_server(args[0])
+
+                if not con_string:
+                    fprint("Não há um servidor com esse nome!")
+                    return "failed"
 
                 try:
                     self.connection = xc.ServerProxy(con_string, allow_none=True)
+                    self.connection.handshake()
                 except:
-                    print(f"Erro ao conectar com o servidor no endereço {con_string}")
+                    fprint(f"Erro ao conectar com o servidor '{args[0]}' no endereço {con_string}. O servidor pode estar indisponível.")
                     return "failed"
                 
-                print(f"Conectado com sucesso no host {con_string}")
+                okprint(f"Conectado com sucesso no host '{args[0]}'")
                 return "fulfilled"
             
             case "unbind":
                 self.connection = None
-
+                okprint("Conexão com o host fechada.")
                 return "fulfilled"
             
             case "repo":
@@ -48,9 +64,11 @@ class ActionConsole:
                 print(f"Número de Partes: {request[1]}")
                 return "fulfilled"
 
-
             case "listp":
                 parts = self.connection.list_parts()
+
+                if parts == []:
+                    print("Este repositório não possui partes")
                 
                 for item in parts:
                     print(item['id'], " => ", item['name'])
@@ -58,153 +76,199 @@ class ActionConsole:
             
             case "getp":
                 if args == []:
-                    print("Nenhum Id passado para busca!")
+                    fprint("Nenhum Id passado para busca!")
                     return "failed"
                 
                 id = args[0].strip()
                 if not id.isdigit():
-                    print("Id inválido!")
+                    fprint("Id inválido!")
                     return "failed"
                 
                 try:
-                    self.part = self.connection.search_part(id)
+                    response = self.connection.search_part(id)
                     
-                    if not self.part:
-                        print(f"Peça não encontrada no repositório atual ({self.connection.repo_info()[0]})")
+                    if not response:
+                        fprint(f"Peça não encontrada no repositório atual ({self.connection.repo_info()[0]})")
                         return "failed"
+
+                    self.part = response
                 except Exception as e:
-                    print(f"Houve um erro ao processar sua requisição pelo servidor: {e}")
+                    fprint(f"Houve um erro ao processar sua requisição pelo servidor: {e}")
                     return "failed"
                 
                 self.show_part()
                 return "fulfilled" 
             
+            case "seekp":
+                if args == []:
+                    fprint("Nenhum Id passado para busca!")
+                    return "failed"
+                
+                id = args[0].strip()
+                if not id.isdigit():
+                    fprint("Id inválido!")
+                    return "failed"
+                
+                for server in self.servers:
+                    try:
+                        aux_connection = xc.ServerProxy(server['link'], allow_none=True)
+                        part = aux_connection.search_part(id)
+
+                        if part:
+                            self.show_part(part)
+                            return "fulfilled"
+
+                    except:
+                        continue
+                
+                fprint("A peça não foi encontrada em nenhum servidor registrado")
+                return "failed"
+                
+            
             case "showp":
                 if not self.part:
-                    print("Não há uma parte contexto atual, dê 'getp <id>' para procurar uma parte e retorná-la")
+                    fprint("Não há uma parte contexto atual, dê 'getp <id>' para procurar uma parte e retorná-la")
                     return "failed"
                 
                 self.show_part()
                 return "fulfilled"
 
-            case "getsp":
-                if args == []:
-                    print("Nenhum Id passado para busca!")
+            case "showsub":
+                if self.subpart == []:
+                    fprint("Não há subpartes no contexto atual, dê 'getsp <id>' para procurar uma parte e retorná-la")
                     return "failed"
                 
-                id = args[0].strip()
-                if not id.isdigit():
-                    print("Id inválido!")
-                    return "failed"
-                
-                try:
-                    self.subpart = self.connection.search_part(id)
-                    
-                    if not self.subpart:
-                        print(f"Subpeça não encontrada no repositório atual ({self.connection.repo_info()[0]})")
-                        return "failed"
-                except Exception as e:
-                    print(f"Houve um erro ao processar sua requisição pelo servidor: {e}")
-                    return "failed"
-                
-                self.show_part(sub=True)
-                return "fulfilled" 
-            
-            case "showsp":
-                if not self.subpart:
-                    print("Não há uma subparte contexto atual, dê 'getsp <id>' para procurar uma parte e retorná-la")
-                    return "failed"
-                
-                self.show_part(sub=True)
+                self.show_subparts()
                 return "fulfilled"  
             
             case "clearlist":
                 if not self.subpart:
-                    print("Não há uma subparte no contexto atual, dê 'getp <id>' para procurar uma parte e retorná-la")
+                    fprint("Não há uma subparte no contexto atual, dê 'getp <id>' para procurar uma parte e retorná-la")
                     return "failed"
                 
-                if self.subpart['subparts'] == []:
-                    print("Não há subpartes para serem apagadas.")
+                if self.subpart == []:
+                    fprint("Não há subpartes para serem apagadas.")
                     return "failed"
                 
                 try:
                     response = self.connection.clear_subparts(self.part['id'])
                 except Exception as e:
-                    print(f"Houve um erro ao processar sua requisição pelo servidor: {e}")
+                    fprint(f"Houve um erro ao processar sua requisição pelo servidor: {e}")
                     return "failed"
                 
                 if not response:
-                    print("Houve um conflito de Id's no servidor, tenha certeza que a peça é desse repositório")
+                    fprint("Houve um conflito de Id's no servidor, tenha certeza que a peça é desse repositório")
                     return "failed"
                 
                 self.subpart = response
-                print("Subpartes apagadas com sucesso!")
+                okprint("Subpartes apagadas com sucesso!")
                 return "fulfilled" 
             
-            case "addsubpart":
+            case "addsub":
+                if not self.part:
+                    fprint("Não há uma parte no contexto atual, procure por ambas e tente novamente!")
+                    return "failed"
+                
                 if len(args) < 1:
-                    print("Número de peças não passado!")
+                    fprint("Número de peças não passado!")
                     return "failed"
                 
-                if not self.subpart or not self.part:
-                    print("Não há uma parte ou subparte no contexto atual, procure por ambas e tente novamente!")
-                    return "failed"
-
-                try:
-                    n_parts = int(args[0])
-                except:
-                    print("Número de peças em formato inválido!")
-                    return "failed"
-
-                response = self.connection.add_subpart(self.part['id'], self.subpart['id'], n_parts)
-                if not response:
-                    print("Houve um conflito de Id's no servidor, tenha certeza que a peça é desse repositório")
+                if not args[0].isdigit():
+                    fprint("Número de peças em formato errado!")
                     return "failed"
                 
-                self.part = response
-                self.show_part()
+                part_tuple = (self.part['id'], int(args[0]))
+                self.subpart.append(part_tuple)
+                self.part = None
+                okprint("Subparte adicionada na lista!")
                 return "fulfilled"
 
-            case "addp":
-                name = input('Nome da peça: \n')
+            case "typep":
+                if not self.part:
+                    fprint("Não há uma parte contexto atual, dê 'getp <id>' para procurar uma parte e retorná-la")
+                    return "failed"
+                
+                if self.part['subparts'] == []:
+                    print("A peça é primitiva")
+                else:
+                    print("A peça é agregada")
+                return "fulfilled"
 
+            case "appendsub":
+                if not self.part or self.subpart == []:
+                    fprint("Não há uma parte no contexto atual ou não há subpartes para referenciar")
+                    return "failed"
+                
+                response = self.connection.add_subpart(self.part['id'], self.subpart)
+                if not response:
+                    fprint("Houve um conflito de Id's no servidor, tenha certeza que a peça é desse repositório")
+                    return "failed"
+                
+                self.subpart = []
+                self.part = response
+                self.show_part()
+
+            case "addp":
+                name = input('\nNome da peça: \n')
                 desc = input('\nDescrição da peça: \n')
 
-                new_part = self.connection.create_part(name, desc)
+                new_part = self.connection.create_part(name, desc, self.subpart)
                 self.part = new_part
-                print(f"Peça criada! ID de número: {new_part['id']}")
+
+                okprint(f"\nPeça criada! ID de peça: {new_part['id']}")
                 return "fulfilled"
             
             case "help":
+                # TODO
                 return 
             
             case "quit":
                 return "quit"
             
             case _:
-                print("Comando não reconhecido!")
+                fprint("Comando não reconhecido!")
                 return "error"
 
-        
-    def show_part(self, sub=False):
-        if sub:
-            show = self.subpart
-        else:
-            show = self.part
+    def lookup_server(self, servername):
+        for ser in self.servers:
+            if ser['name'] == servername:
+                return ser['link']
+            
+        return None
 
+
+    def show_subparts(self):
+        for sub, qtd in self.subpart:
+            part_s = self.connection.search_part(sub)
+
+            if not part_s:
+                part_s = "<Parte em outro repositório>"
+            else:
+                part_s = part_s['name']
+            print(f"Id => {sub} [{part_s}] | Qtd => {qtd}")
+    
+    def show_part(self, part=None):
+        if part:
+            show = part
+        else:
+            show = self.part    
+
+        print(f"Repo Origem => {show['repo']}\n")
         print(f"Id => {show['id']}")
         print(f"Nome => {show['name']}")
         print(f"Descrição => {show['description']}")
         print("Subpartes: ")
 
-        if show['subparts'] != []:
-            for sub, qtd in show['subparts']:
-                part_s = self.connection.search_part(sub)
-
-                if not part_s:
-                    part_s = "Parte em outro repositório"
-                else:
-                    part_s = part_s['name']
-                print(f"\tId => {sub} [{part_s}] | Qtd => {qtd}")        
-        else:
+        if show['subparts'] == []:
             print("\t-")
+            return 
+                
+        for sub, qtd in show['subparts']:
+            part_s = self.connection.search_part(sub)
+
+            if not part_s:
+                part_s = "<Parte em outro repositório>"
+            else:
+                part_s = part_s['name']
+
+            print(f"\tId => {sub} [{part_s}] | Qtd => {qtd}")        

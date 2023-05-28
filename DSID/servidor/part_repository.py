@@ -7,6 +7,9 @@ class PartRepository:
         self.parts = { }
         self.length = 0
 
+    def handshake(self):
+        return True
+    
     def repo_info(self):
         '''Examinando o nome do repositorio e o numero de pecas nele contidas'''
         return (self.name, self.length)
@@ -29,12 +32,12 @@ class PartRepository:
         part = self.parts[id]
         return "primitive" if part.subparts == [] else "aggregated"
     
-    def add_subpart(self, id_part, id_subpart, n_parts):
+    def add_subpart(self, id_part, subparts):
         if not id_part in self.parts.keys():
             return None
         
-        super_tuple = (id_subpart, n_parts)
-        self.parts[id_part].subparts.append(super_tuple)
+        for item in subparts:
+            self.parts[id_part].subparts.append(item)
         return self.parts[id_part]
 
     def list_subparts(self):
@@ -52,11 +55,11 @@ class PartRepository:
 
         return self.parts[id]
 
-    def create_part(self, name, desc) -> Part:
+    def create_part(self, name, desc, subparts) -> Part:
         '''Adicionando ao repositório novas peças (primitivas ou agregadas)'''
         id = str(random.randint(100,99999))
 
-        new_part = Part(id, name, desc, [])
+        new_part = Part(id, name, desc, subparts, self.name)
         self.parts[new_part.id] = new_part
         self.length += 1
         return new_part
