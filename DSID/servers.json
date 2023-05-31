@@ -1,18 +1,67 @@
 [
     {
         "name": "orchid",
-        "link":"http://127.0.0.1:335"
+        "link":"http://127.0.0.1:335",
+        "data": [
+
+        ]
     },
     {
         "name": "daisy",
-        "link":"http://127.0.0.1:645"
+        "link":"http://127.0.0.1:645",
+        "data": [
+
+        ]
     },
     {
         "name": "rose",
-        "link":"http://127.0.0.1:915"
+        "link":"http://127.0.0.1:915",
+        "data": [
+            {
+                "name": "Blinkenlights", 
+                "desc": "Blinkenlights is a neologism for diagnostic lights usually on the front panels of old mainframe computers", 
+                "subparts": []
+            },
+            {
+                "name": "Thiotimoline", 
+                "desc": "Thiotimoline is a fictitious chemical compound conceived by American biochemist and science fiction author Isaac Asimov.", 
+                "subparts": []
+            },
+            {
+                "name": "Unobtainium", 
+                "desc": "Unobtainium is a term used in fiction, engineering, and common situations for a material ideal for a particular application but impractically hard to get.", 
+                "subparts": []
+            },
+            {
+                "name": "Write-only memory", 
+                "desc": "Write-only memory (WOM), the opposite of read-only memory (ROM), began as a humorous reference to a memory device that could be written to but not read", 
+                "subparts": []
+            }
+
+
+    
+        ]
     },
     {
         "name": "tullip",
-        "link":"http://127.0.0.1:785"
+        "link":"http://127.0.0.1:785",
+        "data":[
+            {
+                "name": "Rebimboca da Parafuseta", 
+                "desc": "Aquilo que está em um turbo encabulador", 
+                "subparts": [] 
+            },
+
+            {
+                "name": "Turbo Encabulador", 
+                "desc": "The original machine had a base plate of prefabulated amulite, surmounted by a malleable logarithmic casing.", 
+                "subparts": []
+            },
+            {
+                "name": "Chave Desbloqueadora", 
+                "desc":"IHULLLLLLLLL QUEBRA TUDO", 
+                "subparts": []
+            }
+        ]
     }
 ]

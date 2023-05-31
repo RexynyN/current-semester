@@ -1,4 +1,5 @@
 import json
+import random
 import sys
 from part_repository import PartRepository
 from xmlrpc.server import SimpleXMLRPCServer
@@ -6,18 +7,17 @@ from xmlrpc.server import SimpleXMLRPCServer
 # SERVER CONFIGS
 IP = '127.0.0.1'
 
-def bootstrap_parts(repo:PartRepository, bobo=2):
-    if bobo == 1:
-        repo.create_part("Rebimboca da Parafuseta", "Aquilo que retorna o turbo encabulador", [])
-        repo.create_part("Turbo Encabulador", "The original machine had a base plate of prefabulated amulite, surmounted by a malleable logarithmic casing.", [])
-        repo.create_part("Chave Desbloqueadora", "IHULLLLLLLLL", [])
-    elif bobo == 2:
-        repo.create_part("Blinkenlights", "Blinkenlights is a neologism for diagnostic lights usually on the front panels of old mainframe computers", [])
-        repo.create_part("Thiotimoline", "Thiotimoline is a fictitious chemical compound conceived by American biochemist and science fiction author Isaac Asimov.", [])
-        repo.create_part("Unobtainium", "Unobtainium is a term used in fiction, engineering, and common situations for a material ideal for a particular application but impractically hard to get.", [])
-        repo.create_part("Write-only memory", "Write-only memory (WOM), the opposite of read-only memory (ROM), began as a humorous reference to a memory device that could be written to but not read", [])
-    else:
-        return
+def bootstrap_parts(repo:PartRepository, servername):
+    with open("servers.json", 'r', encoding="utf-8") as f:
+        servers = json.load(f)
+    
+    i = 0
+    for index, ser in enumerate(servers):
+        if ser['name'] == servername:
+            i = index
+
+    for peca in servers[i]['data']:
+        repo.create_part(peca['name'], peca['desc'], peca['subparts'])
     
 def lookup_server(servername):
     with open("servers.json", 'r', encoding="utf-8") as f:
@@ -50,8 +50,8 @@ def main(args):
 
     repo = PartRepository(args[0])
 
-    # Cria uma base de dados mock, bobo é 1 ou 2
-    bootstrap_parts(repo, bobo=2)
+    # Cria uma base de dados mock, 
+    bootstrap_parts(repo, args[0])
 
     servidor.register_instance(repo)
 
