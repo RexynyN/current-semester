@@ -10,4 +10,3 @@ effect = ""
 while effect != 'quit':
 	command = input("\n>> ")
 	effect = console.run_command(command)
-	

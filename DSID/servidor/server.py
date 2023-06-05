@@ -45,7 +45,7 @@ def main(args):
 
 
     servidor = SimpleXMLRPCServer((ip, int(port)), allow_none=True)
-    print('\tParts Server')
+    print(f'\tParts Server - Repo: {args[0]}')
     print("Esperando por conexões...")
 
     repo = PartRepository(args[0])

@@ -16,7 +16,7 @@ class ActionConsole:
             # Lista de servidores
             self.servers = json.load(f)        
 
- 
+    
     # Valida o comando e roda o switch para interpretar o comando
     def run_command(self, command:str) -> str:
         cmd_free = ["servers", "bind", "help", "quit"]
@@ -282,7 +282,7 @@ class ActionConsole:
         if part:
             show = part
         else:
-            show = self.part    
+            show = self.part
 
         infoprint(f"\nRepo Origem => {show['repo']}\n")
         infoprint(f"Id => {show['id']}")

@@ -59,21 +59,3 @@ class PartRepository:
         self.parts[new_part.id] = new_part
         self.length += 1
         return new_part
-
-
-
-infoprint("servers => Lista o nome de todos os servidores registrados")
-infoprint("bind => Se conecta a um servidor usando o seu nome")
-infoprint("unbind => Desconecta do servidor atual")
-infoprint("repo => Lista as informações do repositório atual")
-infoprint("listp => Lista todas as partes do repositório")
-infoprint("getp => Coloca a peça com o ID passado no contexto atual")
-infoprint("showp => Mostra as informações da peça atual")
-infoprint("seekp => Retorna a peça com ID passado, procurando por todos os servidores registrados")
-infoprint("subp => Lista todas as subpartes da peça atual")
-infoprint("addp => Cria uma nova peça, e adiciona as subpeças atuais (se houver alguma)")
-infoprint("showsub => Mostra a lista de subpeças no contexto atual")
-infoprint("clearlist => Apaga a lista de subpeças atual")
-infoprint("addsub => Adiciona a peça atual na lista de subpeças")
-infoprint("appendsub => Adiciona todas as subpeças da lista atual na peça atual")
-infoprint("quit => Sai da aplicação")
