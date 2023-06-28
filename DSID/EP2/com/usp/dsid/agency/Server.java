@@ -4,15 +4,20 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
-public class Server  {
-    public static void main(String[] args) {
-        try {
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Entre com o nome do servidor: ");
-            String name = sc.nextLine();
-            System.out.print("Entre com a porta do servidor: ");
-            int port = Integer.parseInt(sc.nextLine());
+import com.usp.dsid.common.Agency;
 
+public class Server implements Runnable {
+    private String name;
+    private int port;
+
+    public Server (String name, int port){
+        this.name = name;
+        this.port = port;
+    }
+
+    @Override
+    public void run() {
+        try {
             // TODO: Criar uma chamada para o servidor de nomes para registrar o servidor
             // por lá.
             Agency agency = new Agency();
@@ -24,4 +29,6 @@ public class Server  {
             System.exit(0);
         }
     }
+    
+
 }

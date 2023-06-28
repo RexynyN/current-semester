@@ -1,4 +1,4 @@
-package com.usp.dsid;
+package com.usp.dsid.common;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

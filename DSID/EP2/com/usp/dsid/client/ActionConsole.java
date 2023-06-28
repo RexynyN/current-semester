@@ -3,7 +3,7 @@ package com.usp.dsid.client;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import com.usp.dsid.agency.Agency;
+import com.usp.dsid.common.Agency;
 
 public class ActionConsole {
     private static Agency agency;

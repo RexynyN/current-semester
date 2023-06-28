@@ -1,19 +1,38 @@
-package com.usp.dsid.agency;
+package com.usp.dsid.common;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
-import com.usp.dsid.agency.apollo.ApolloThread;
-import com.usp.dsid.agency.apollo.CodeResult;
+import com.usp.dsid.common.apollo.ApolloThread;
+import com.usp.dsid.common.apollo.CodeResult;
+import com.usp.dsid.common.agents.Agent;
+import com.usp.dsid.common.agents.Worker;
 
-public class Agency extends UnicastRemoteObject {
+public class Agency extends UnicastRemoteObject implements Runnable {
+    private Queue<Agent> tasks = new LinkedList<Agent>();
+    private List<Agent> finishedAgents = new ArrayList<Agent>();
 
     public Agency() throws RemoteException {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-    public void runPayload() throws RemoteException {
+    public void receiveAgent(Agent newAgent){
+        
+    }
+
+    public boolean checkAgent(int id){
+        return true;
+    }
+
+    public Agent returnAgent(int id){
+        return new Worker("");
+    }
+
+    public void runPayload() {
         String[] argus = new String[] { "2", "2" };
         String program = "public class TestClass {\n"
                 + "    public static int main (String [] args) {\n"
@@ -43,6 +62,12 @@ public class Agency extends UnicastRemoteObject {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void run() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'run'");
     }
 
 }
