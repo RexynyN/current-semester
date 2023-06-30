@@ -1,7 +1,6 @@
 package bruh;
 
 import java.awt.*;
-import java.io.*;
 
 /**
  * A simple Agent that makes you aware

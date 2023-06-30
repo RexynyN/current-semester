@@ -1,4 +1,5 @@
 package bruh;
+
 /**
  * A Sandbox that an Agent can "play" in.
  *
@@ -6,41 +7,37 @@ package bruh;
  * It runs its Agent in that thread.
  *
  * @version 1.0
- * @author  Prof. David Bernstein, James Madison University
+ * @author Prof. David Bernstein, James Madison University
  */
-public class Sandbox implements Runnable
-{
-    private Agent         agent;
-    private Thread        controlThread;
+public class Sandbox implements Runnable {
+   private Agent agent;
+   private Thread controlThread;
 
-    /**
-     * Explicit Value Constructor
-     *
-     * @param agent  The Agent to execute
-     */
-    public Sandbox(Agent agent)
-    {
-       this.agent = agent;
+   /**
+    * Explicit Value Constructor
+    *
+    * @param agent The Agent to execute
+    */
+   public Sandbox(Agent agent) {
+      this.agent = agent;
 
-       controlThread = new Thread(this);
-    }
+      controlThread = new Thread(this);
+   }
 
-    /**
-     * The code to execute in this Sandbox object's
-     * thread of execution
-     */
-    public void run()
-    {
-       agent.run();
-    }
+   /**
+    * The code to execute in this Sandbox object's
+    * thread of execution
+    */
+   @Override
+   public void run() {
+      agent.run();
+   }
 
-    /**
-     * Start this Sandbox
-     */
-    public void start()
-    {
-       controlThread.start();
-    }
-    
+   /**
+    * Start this Sandbox
+    */
+   public void start() {
+      controlThread.start();
+   }
+
 }
-      
