@@ -1,37 +1,31 @@
-package bruh;
+package com.usp.dsid.prototype;
 
 import java.io.*;
-import java.net.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.*;
 
-/**
- * A simple mobile agent
- *
- * @version 1.0
- * @author Prof. David Bernstein, James Madison University
- */
+//A simple mobile agent
 public abstract class Agent implements Runnable, Serializable {
     private byte[] byteCodes;
-    private LinkedList<String> hosts;
-    private String home;
+    private LinkedList<Host> hosts;
+    private Host home;
 
-    public static final int PORT = 9200;
     public static final String EXT = ".class";
 
     /**
      * Explicit Value Constructor
-     *
      * @param home The "home" host
      */
-    public Agent(String home) {
-        FileInputStream in;
-
+    public Agent(Host home) {
         byteCodes = null;
-
         try {
-            in = new FileInputStream(getName() + EXT);
+            FileInputStream in = new FileInputStream(getName() + EXT);
             byteCodes = new byte[in.available()];
             in.read(byteCodes);
+            in.close();
         } catch (IOException ioe) {
             byteCodes = null;
         }
@@ -44,7 +38,7 @@ public abstract class Agent implements Runnable, Serializable {
      *
      * @param host The host
      */
-    public void addHost(String host) {
+    public void addHost(Host host) {
         hosts.addFirst(host);
     }
 
@@ -77,23 +71,40 @@ public abstract class Agent implements Runnable, Serializable {
      *
      * @param host The host to go to
      */
-    public void goTo(String host) {
-        ObjectOutputStream out;
-        Socket s;
+    public void goTo(Host host) {
+        if(host.equals(home)){
+            getMeHome();
+            return;
+        }
 
         try {
-            s = new Socket(host, PORT);
-            out = new ObjectOutputStream(s.getOutputStream());
+            Registry registry = LocateRegistry.getRegistry(host.getHost(), host.getPort());
+            Agency agency = (Agency) registry.lookup(host.getName());
+            System.out.println("Conectado com a agência: " + host.getName());
 
-            out.writeObject(getName());
-            out.writeObject(getByteCodes());
-            out.writeObject(this);
-        } catch (IOException ioe) {
+            agency.runAgent(getName(), this, getByteCodes());
+        } catch (RemoteException exc) {
+            System.out.println("Piu");
             host = hosts.getFirst();
             hosts.removeFirst();
             if (host != null)
                 goTo(host);
+            exc.printStackTrace();
+        } catch(NotBoundException nbe){
+            System.out.println("It was not bound");
         }
+    }
+
+    private void getMeHome(){
+        try {
+            Registry registry = LocateRegistry.getRegistry(home.getHost(), home.getPort());
+            Agency agency = (Agency) registry.lookup(home.getName());
+            System.out.println("Retornando um agente para agência: " + home.getName());
+
+            agency.runAgent(getName(), this, getByteCodes());
+        } catch (Exception exc) {
+            System.out.println("O agente não conseguiu retornar para a agência " + home.getName());
+        } 
     }
 
     /**
@@ -113,25 +124,22 @@ public abstract class Agent implements Runnable, Serializable {
      * of execution
      */
     public void run() {
-        String host;
-
+        Host host;
         if (hosts == null) {
-            hosts = new LinkedList<String>();
+            hosts = new LinkedList<Host>();
             hosts.addLast(home);
             beforeDeparture();
-        } else if (hosts.size() == 0) {
+        } 
+        else if (hosts.size() == 0) {
             onReturn();
-        } else {
+        } 
+        else {
             onArrival();
 
             host = hosts.getFirst();
             hosts.removeFirst();
             goTo(host);
         }
-
-        // Drop out of the run method which
-        // will terminate the thread on the old
-        // Sandbox
     }
 
 }

@@ -1,4 +1,4 @@
-package bruh;
+package com.usp.dsid.prototype;
 
 import java.awt.*;
 
@@ -16,7 +16,7 @@ public class Kilroy extends Agent {
      *
      * @param home The "home" host
      */
-    public Kilroy(String home) {
+    public Kilroy(Host home) {
         super(home);
     }
 
@@ -25,7 +25,7 @@ public class Kilroy extends Agent {
      * Agent leaves home
      */
     public void beforeDeparture() {
-        goTo("localhost");
+        goTo(new Host(9200, "Freno"));
     }
 
     /**
@@ -39,7 +39,7 @@ public class Kilroy extends Agent {
         f.setLayout(new BorderLayout());
         f.add(new Label("Kilroy Was Here!", Label.CENTER));
         f.setSize(400, 50);
-        f.show();
+        f.setVisible(true);
         f.toFront();
 
         try {

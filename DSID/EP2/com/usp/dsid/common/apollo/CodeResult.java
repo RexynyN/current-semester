@@ -1,6 +1,8 @@
 package com.usp.dsid.common.apollo;
 
-public class CodeResult {
+import java.io.Serializable;
+
+public class CodeResult implements Serializable {
     private Object returnValue;
     private String logs;
     private String compilationErrors; 
