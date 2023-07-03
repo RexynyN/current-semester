@@ -27,3 +27,7 @@ Retorna os valores calculados na agência e deleta o agente atual
 - quit
 Sai do client (lol)
 
+# Algumas constraints 
+
+- Deve ter apenas uma agência de seekers, que o servidor de nomes deve criar.
+- 

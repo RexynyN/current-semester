@@ -8,7 +8,7 @@ public class AgencyServer {
 
     public static void main(String[] args) {
         // Preguiça de digitar isso nos testes omegalul
-        String name = "Breno";
+        String name = "YWing";
         int port = 4444;
 
         // Scanner scan = new Scanner(System.in);

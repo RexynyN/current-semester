@@ -8,7 +8,7 @@ public class Client {
         // Cria o host dessa agência
         Host home = new Host(9200, "MotherShip");
         // Coloca o caminho da classe "Blooie na raiz do projeto, pls"
-        Worker worker = new Worker(home, "C:\\Users\\Admin\\codes\\current-semester\\DSID\\EP2\\Blooie.java", null);
+        Worker worker = new Worker(home, "poggers", "C:\\Users\\Admin\\codes\\current-semester\\DSID\\EP2\\Blooie.java", null);
         
         // Aqui ele abre uma agência pra só pra retornar o worker como teste, mas na implementação final
         // ficaria igual ao "AgencyServer.java" 

@@ -7,19 +7,16 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
 
-//A simple mobile agent
+/** A simple mobile agent */
 public abstract class Agent implements Runnable, Serializable {
-    private byte[] byteCodes;
-    private LinkedList<Host> hosts;
-    private Host home;
+    protected byte[] byteCodes;
+    protected LinkedList<Host> hosts;
+    protected Host home;
+    protected String id; 
 
     public static final String EXT = ".class";
 
-    /**
-     * Explicit Value Constructor
-     * @param home The "home" host
-     */
-    public Agent(Host home) {
+    public Agent(Host home, String id) {
         byteCodes = null;
         try {
             FileInputStream in = new FileInputStream(getName() + EXT);
@@ -31,46 +28,15 @@ public abstract class Agent implements Runnable, Serializable {
         }
 
         this.home = home;
+        this.id = id;
     }
 
-    /**
-     * Add a host to the top of the stack
-     *
-     * @param host The host
-     */
-    public void addHost(Host host) {
-        hosts.addFirst(host);
-    }
-
-    /**
-     * The code that should be executed before this
-     * Agent leaves home
-     */
-    public abstract void beforeDeparture();
-
-    /**
-     * Get the Java byte codes for this Agent
-     *
-     * @return The byte codes
-     */
-    public byte[] getByteCodes() {
-        return byteCodes;
-    }
-
-    /**
-     * Get the name of the class for this Agent
-     *
-     * @return The name
-     */
+    /** Get the name of the class for this Agent */
     public String getName() {
         return getClass().getName();
     }
 
-    /**
-     * Move this Agent to a Sandbox
-     *
-     * @param host The host to go to
-     */
+    /** Move this Agent to a Sandbox */
     public void goTo(Host host) {
         if(host.equals(home)){
             getMeHome();
@@ -104,25 +70,16 @@ public abstract class Agent implements Runnable, Serializable {
             agency.runAgent(getName(), this, getByteCodes());
         } catch (Exception exc) {
             System.out.println("O agente não conseguiu retornar para a agência " + home.getName());
+            exc.printStackTrace();
         } 
     }
 
-    /**
-     * The code that should be executed when this
-     * Agent arrives at a remote Sandbox
-     */
-    public abstract void onArrival();
+    public void leaveOnlyHome(){
+        hosts.clear();
+        hosts.addLast(home);
+    }
 
-    /**
-     * The code that should be executed when this
-     * Agent returns home
-     */
-    public abstract void onReturn();
-
-    /**
-     * The entry point for the controlling thread
-     * of execution
-     */
+    /** The entry point for the controlling thread of execution */
     public void run() {
         Host host;
         if (hosts == null) {
@@ -132,14 +89,40 @@ public abstract class Agent implements Runnable, Serializable {
         } 
         else if (hosts.size() == 0) {
             onReturn();
+            hosts = null;
         } 
         else {
-            onArrival();
-
             host = hosts.getFirst();
             hosts.removeFirst();
+            onArrival(host);
             goTo(host);
         }
     }
 
+    /** Get the Java byte codes for this Agent */
+    public byte[] getByteCodes() {
+        return byteCodes;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    /** Add a host to the top of the stack */
+    public void addHost(Host host) {
+        hosts.addFirst(host);
+    }
+
+    /** The code that should be executed before this Agent leaves home */
+    public abstract void beforeDeparture();
+
+    /** The code that should be executed when this Agent arrives at a remote Sandbox */
+    public abstract void onArrival(Host host);
+
+    /** The code that should be executed when this Agent returns home */
+    public abstract void onReturn();
+
+    public abstract void readMessage(Message msg);
+
+    public abstract void sendMessage(Host receiver, Message msg);
 }
