@@ -5,10 +5,11 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.usp.dsid.common.Host;
 import com.usp.dsid.common.agents.Agent;
 
 public class LookupServer extends UnicastRemoteObject {    
-    private List<AgencyLookup> agencies = new ArrayList<AgencyLookup>();
+    private List<Host> agencies = new ArrayList<Host>();
     private List<AgentLookup> agents = new ArrayList<AgentLookup>();
 
     public LookupServer () throws RemoteException {

@@ -1,7 +1,10 @@
-package com.usp.dsid.prototype;
+package com.usp.dsid.agency;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+
+import com.usp.dsid.common.Host;
+import com.usp.dsid.common.agents.Worker;
 
 public class Client {
     public static void main(String[] args) {
@@ -26,6 +29,6 @@ public class Client {
         // Inicia o agente
         worker.run();
         // Manda ele pra uma agência
-        worker.goTo(new Host(4444, "Breno"));
+        worker.goTo(new Host(4444, "YWing"));
     }
 }

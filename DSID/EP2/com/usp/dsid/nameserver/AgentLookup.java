@@ -3,13 +3,16 @@ package com.usp.dsid.nameserver;
 public class AgentLookup {
     private String name; 
     private String type;
-    private String originAgency;
+    private AgencyLookup originAgency;
     private AgencyLookup currentAgency;
 
     public AgentLookup(String name, String originAgency) {
         this.name = name;
         this.originAgency = originAgency;
     }
+
+    
+    
 
     public AgentLookup(String name, String originAgency, AgencyLookup currentAgency) {
         this.name = name;

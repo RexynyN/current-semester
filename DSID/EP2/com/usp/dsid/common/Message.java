@@ -1,4 +1,4 @@
-package com.usp.dsid.prototype;
+package com.usp.dsid.common;
 
 import java.io.Serializable;
 

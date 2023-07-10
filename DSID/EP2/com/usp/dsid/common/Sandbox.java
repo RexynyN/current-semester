@@ -1,4 +1,6 @@
-package com.usp.dsid.prototype;
+package com.usp.dsid.common;
+
+import com.usp.dsid.common.agents.Agent;
 
 /**
  * A Sandbox that an Agent can "play" in.

@@ -1,4 +1,4 @@
-package com.usp.dsid.prototype;
+package com.usp.dsid.agency;
 
 import java.io.FileOutputStream;
 import java.rmi.RemoteException;
@@ -7,6 +7,12 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.usp.dsid.common.Message;
+import com.usp.dsid.common.Sandbox;
+import com.usp.dsid.common.agents.Agent;
+import com.usp.dsid.common.apollo.ApolloThread;
+import com.usp.dsid.common.apollo.CodeResult;
 
 public class AgencyRMI extends UnicastRemoteObject implements Agency {
     private List<Agent> agents = new ArrayList<Agent>(); 
@@ -17,7 +23,7 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
     }
 
     public void runAgent(String agentName, Agent agent, byte[] byteCodes) {
-        System.out.println("Um novo agente chegou! Bem-vindo " + agentName);
+        System.out.println("Um novo agente chegou! Bem-vindo " + agent.getId());
 
         try {
             // Save the class on the local file system
@@ -62,7 +68,23 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
 
     @Override
     public void createSeeker() throws RemoteException {
-    
+        try {
+            ApolloThread at = new ApolloThread("program", new String [] {});
+            Thread t = new Thread(at);
+            t.start();
+            t.join();
+            CodeResult output = at.getResult();
+            // CodeResult output = Apollo.runCode(program, argus);
+            if (output.hadErrors()) {
+                String compilationErrors = output.getCompilationErrors();
+                System.out.println(compilationErrors);
+            } else {
+                System.out.println(output.getLogs());
+                System.out.println(output.getReturnValue());
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     

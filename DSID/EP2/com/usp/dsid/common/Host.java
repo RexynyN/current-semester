@@ -1,4 +1,4 @@
-package com.usp.dsid.prototype;
+package com.usp.dsid.common;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ public class Host implements Serializable {
     private String host = "localhost";
     private int port;
     private String name;
-    private String id;1
+    private String id;
     
     public Host(int port, String name) {
         this.port = port;
