@@ -1,4 +1,4 @@
-i5
-16gb 
+i7
+32gb
 gtx 1080 ti
-8gb
+4gb

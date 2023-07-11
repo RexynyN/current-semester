@@ -27,13 +27,13 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
 
         try {
             // Save the class on the local file system
-            FileOutputStream out = new FileOutputStream(agentName + ".class");
-            out.write(byteCodes); 
+            // FileOutputStream out = new FileOutputStream(agentName + ".class");
+            // out.write(byteCodes); 
 
             // Run the Agent in its own Sandbox
             Sandbox sandbox = new Sandbox(agent);
             sandbox.start();
-            out.close();
+            // out.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

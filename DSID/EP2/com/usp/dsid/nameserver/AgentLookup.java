@@ -1,40 +1,14 @@
 package com.usp.dsid.nameserver;
 
+import com.usp.dsid.common.Host;
+
 public class AgentLookup {
     private String name; 
     private String type;
-    private AgencyLookup originAgency;
-    private AgencyLookup currentAgency;
-
-    public AgentLookup(String name, String originAgency) {
-        this.name = name;
-        this.originAgency = originAgency;
-    }
+    private Host originAgency;
+    private Host currentAgency;
 
     
-    
-
-    public AgentLookup(String name, String originAgency, AgencyLookup currentAgency) {
-        this.name = name;
-        this.originAgency = originAgency;
-        this.currentAgency = currentAgency;
-    }
-
-    public String getOriginAgency() {
-        return originAgency;
-    }
-
-    public AgencyLookup getCurrentAgency() {
-        return currentAgency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
 
     @Override
     public boolean equals(Object obj) {
