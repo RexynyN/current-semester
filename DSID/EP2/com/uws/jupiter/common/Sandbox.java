@@ -1,6 +1,6 @@
-package com.usp.dsid.common;
+package com.uws.jupiter.common;
 
-import com.usp.dsid.common.agents.Agent;
+import com.uws.jupiter.common.agents.Agent;
 
 /**
  * A Sandbox that an Agent can "play" in.

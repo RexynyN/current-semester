@@ -1,4 +1,4 @@
-package com.usp.dsid.common.apollo;
+package com.uws.jupiter.common.apollo;
 /**
  * ApolloThread é uma classe para rodar os códigos Apollo em um contexto de Threads, podendo rodar múltiplos programas de uma vez.
  */

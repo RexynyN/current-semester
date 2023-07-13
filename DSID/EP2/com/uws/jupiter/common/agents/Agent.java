@@ -1,4 +1,4 @@
-package com.usp.dsid.common.agents;
+package com.uws.jupiter.common.agents;
 
 import java.io.*;
 import java.rmi.NotBoundException;
@@ -7,9 +7,12 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.*;
 
-import com.usp.dsid.agency.Agency;
-import com.usp.dsid.common.Host;
-import com.usp.dsid.common.Message;
+import com.uws.jupiter.agency.Agency;
+import com.uws.jupiter.common.Host;
+import com.uws.jupiter.common.Message;
+import com.uws.jupiter.common.Utils;
+import com.uws.jupiter.nameserver.AgentLookup;
+import com.uws.jupiter.nameserver.LookupServer;
 
 /** A simple mobile agent */
 public abstract class Agent implements Runnable, Serializable {
@@ -23,7 +26,7 @@ public abstract class Agent implements Runnable, Serializable {
     public Agent(Host home, String id) {
         byteCodes = null;
         try {
-            FileInputStream in = new FileInputStream(getName() + EXT);
+            FileInputStream in = new FileInputStream(getClassName() + EXT);
             byteCodes = new byte[in.available()];
             in.read(byteCodes);
             in.close();
@@ -35,13 +38,23 @@ public abstract class Agent implements Runnable, Serializable {
         this.id = id;
     }
 
-    /** Get the name of the class for this Agent */
+    /** Get the name of this Agent */
     public String getName() {
-        return getClass().getName();
+        return this.id;
     }
 
-    /** Move this Agent to a Sandbox */
+    public String getClassName(){
+        String[] strips = getClass().getName().split("\\.");
+        return strips[strips.length - 1];
+    }
+
+    public Host getHome() {
+        return home;
+    }
+
     public void goTo(Host host) {
+        // TODO: Atualizar no servidor de nome
+
         if(host.equals(home)){
             getMeHome();
             return;
@@ -66,13 +79,14 @@ public abstract class Agent implements Runnable, Serializable {
         }
     }
 
-    private void getMeHome(){
+    protected void getMeHome(){
         try {
             Registry registry = LocateRegistry.getRegistry(home.getHost(), home.getPort());
             Agency agency = (Agency) registry.lookup(home.getName());
             System.out.println("Retornando um agente para agência: " + home.getName());
 
             agency.runAgent(getName(), this, getByteCodes());
+            hosts.clear();
         } catch (Exception exc) {
             System.out.println("O agente não conseguiu retornar para a agência " + home.getName());
             exc.printStackTrace();
@@ -104,6 +118,24 @@ public abstract class Agent implements Runnable, Serializable {
         }
     }
 
+    public void sendMessage(AgentLookup receiver, Message msg) {
+        AgentLookup agent;
+        // Pega a agência de origem do agente e manda mensagem
+        try {
+            LookupServer ns =  Utils.connectNameServer();
+            agent = ns.searchAgent(receiver.getName());
+        
+            Host location = agent.getOriginAgency();
+            Registry registry = LocateRegistry.getRegistry("localhost", location.getPort());
+            Agency mail = (Agency) registry.lookup(location.getName());
+
+            mail.forwardMessage(agent.getName(), msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
     /** Get the Java byte codes for this Agent */
     public byte[] getByteCodes() {
         return byteCodes;
@@ -127,7 +159,6 @@ public abstract class Agent implements Runnable, Serializable {
     /** The code that should be executed when this Agent returns home */
     public abstract void onReturn();
 
+    // Decide o que fazer com a mensagem recebida de algum agente
     public abstract void readMessage(Message msg);
-
-    public abstract void sendMessage(Host receiver, Message msg);
 }

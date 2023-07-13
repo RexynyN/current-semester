@@ -1,4 +1,4 @@
-package com.usp.dsid.common.apollo;
+package com.uws.jupiter.common.apollo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;

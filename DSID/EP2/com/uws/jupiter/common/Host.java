@@ -1,4 +1,4 @@
-package com.usp.dsid.common;
+package com.uws.jupiter.common;
 
 import java.io.Serializable;
 
@@ -6,17 +6,10 @@ public class Host implements Serializable {
     private String host = "localhost";
     private int port;
     private String name;
-    private String id;
     
     public Host(int port, String name) {
         this.port = port;
         this.name = name;
-    }
-
-    public Host(int port, String name, String id) {
-        this.port = port;
-        this.name = name;
-        this.id = id;
     }
 
     public String getHost() {
@@ -29,10 +22,6 @@ public class Host implements Serializable {
     
     public String getName() {
         return name;
-    }
-    
-    public String getId() {
-        return id;
     }
 
     @Override
@@ -52,8 +41,4 @@ public class Host implements Serializable {
 
         return false;
     }
-
-
-
-    
 }

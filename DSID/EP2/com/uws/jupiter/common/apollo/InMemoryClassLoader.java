@@ -1,4 +1,4 @@
-package com.usp.dsid.common.apollo;
+package com.uws.jupiter.common.apollo;
 
 import static java.util.Objects.requireNonNull;
 
