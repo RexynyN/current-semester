@@ -33,7 +33,5 @@ Retorna os valores calculados pelo agente (jogando na tela ou salvando o retorno
 
 # Algumas constraints 
 
-- Deve ter apenas uma agência de seekers, que o servidor de nomes deve criar.
-- Deve ter prints explicando oq o programa está fazendo no momento no client (usar os prints coloridos do Utils.java)
 - Se quiser ter uma ideia de como fazer o client, usa esse como base: https://github.com/amandaperellon/DSID-EP1
     - Ou no nosso repo, procura pelo EP1, veja como foi feito e traduz pra java (não é muito dificil de entender python, juro)

@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -18,7 +20,7 @@ public class Utils {
     private static final String ENDC = "\033[0m";
 
     // NameServer
-    private static String nsName = "nameserver";
+    private static String nsName = "NameServer";
     private static int nsPort = 5454;
 
     public static void failPrint(Object str){
@@ -46,14 +48,33 @@ public class Utils {
             while (scanner.hasNextLine()) {
                 fileContent += scanner.nextLine();
             }
+
             scanner.close();
 
             return fileContent;
         } catch (Exception e) {
-            e.printStackTrace();
             return "";
         }
     }
+
+    public static String [] readFileAllLines(String fileName) {
+        try {
+            Path path = Paths.get(fileName);
+            Scanner scanner = new Scanner(path);
+            List<String> lines = new ArrayList<>();
+            
+            while (scanner.hasNextLine()) {
+                lines.add(scanner.nextLine());
+            }
+
+            scanner.close();
+            return lines.toArray(new String[0]);
+        } catch (Exception e) {
+            return new String[] { "" };
+        }
+    }
+
+
 
     public static int getRandomID(){
         Random r = new Random();

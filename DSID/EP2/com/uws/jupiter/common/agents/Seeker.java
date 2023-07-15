@@ -1,7 +1,5 @@
 package com.uws.jupiter.common.agents;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,47 +27,6 @@ public class Seeker extends Agent {
     @Override
     public void beforeDeparture() {
         System.out.println(getId() + " indo procurar uma máquina bonita!");
-    }
-
-    @Override
-    public void onArrival(Host host) {
-        String [] reqs = Utils.readFile(host.getName() + ".txt").split("\n");
-
-        boolean equal = true;
-        for(int i = 0; i < reqs.length; i++){
-            if (reqs[i] == requirements[i]){
-                equal = false;
-                break;
-            }
-        }
-
-        if(!equal)
-            return;
-
-        returnMessage = new Message(self, "found", new String[] { host.getName() });
-        this.getMeHome();
-    }
-
-    @Override
-    public void onReturn() {
-        // Se ele achar uma máquina, retorna.
-        if (returnMessage != null){
-            sendMessage(requester, returnMessage);
-            returnMessage = null;
-            return;
-        }
-        // Se não, retorna negativo
-        sendMessage(requester, new Message(self, "notfound", new String[] { }));
-    }
-    
-    private void seekMachine(String [] body) {
-        this.requirements = body;
-
-        // Fazendo os trâmites antes de sair do metodo run
-        hosts = new LinkedList<Host>();
-        hosts.addLast(home);
-        this.beforeDeparture();
-
         try {
             LookupServer ns =  Utils.connectNameServer();
             List<Host> agencies = ns.listAgencies();
@@ -77,10 +34,48 @@ public class Seeker extends Agent {
                 hosts.addLast(host);
             }
 
-            this.run();
+            // Começa o primeiro "laço" de visitar todas as agências
+            currentHost = hosts.getFirst();
+            hosts.removeFirst();
+            goTo(currentHost);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onArrival(Host host) {
+        String [] reqs = Utils.readFileAllLines(host.getName() + ".txt");
+
+        boolean equal = true;
+        for(int i = 0; i < reqs.length; i++){
+            if (!reqs[i].trim().equals(requirements[i].trim())){
+                equal = false;
+                break;
+            }
+        }
+
+        if(equal){
+            returnMessage = new Message(self, "found", new String[] { host.getName() });
+        }
+    }
+
+    @Override
+    public void onReturn() {
+        // Se ele achar uma máquina, retorna.
+        if (returnMessage != null){
+            Utils.okPrint("O Seeker achou uma máquina!");
+            sendMessage(requester, returnMessage);
+            return;
+        }else{
+            // Se não, retorna negativo
+            sendMessage(requester, new Message(self, "notfound", new String[] { }));
+        }
+    }
+    
+    private void seekMachine(String [] body) {
+        this.requirements = body;
+        run();
     }
 
     @Override

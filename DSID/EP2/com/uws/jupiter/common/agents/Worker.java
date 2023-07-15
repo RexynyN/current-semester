@@ -14,6 +14,8 @@ public class Worker extends Agent {
     private String payload;
     private String[] args;
     private CodeResult result;
+    
+
     private AgentLookup self;
     private Host targetMachine;
 
@@ -25,6 +27,7 @@ public class Worker extends Agent {
         this.payload = Utils.readFile(codePath);
         this.args = args;
         self = new AgentLookup(id, this.getClassName(), this.home);
+        targetMachine = null;
     }
 
     public Worker(Host home, String id) {
@@ -35,23 +38,22 @@ public class Worker extends Agent {
     @Override
     public void beforeDeparture() {
         System.out.println(getId() + " saindo em uma aventura!");
+        currentHost = targetMachine;
+        goTo(currentHost);
     }
 
     @Override
     public void onArrival(Host host) {
-        System.out.println("Olá " + host.getName() + "! Estou rodando aqui!");
+        System.out.println("Olá " + host.getName() + "! " + self.getName() + " rodando aqui!");
         result = Apollo.runCode(payload, args);
     }
 
     @Override
     public void onReturn() {
-        // CodeResult result = Apollo.runCode(program, argus);
         if (result.hadErrors()) {
-            String compilationErrors = result.getCompilationErrors();
-            System.out.println(compilationErrors);
+            Utils.failPrint("O código foi rodado, mas houveram erros!");
         } else {
-            System.out.println(result.getLogs());
-            System.out.println(result.getReturnValue());
+            Utils.okPrint("O código foi rodado com sucesso!");
         }
     }
 
@@ -59,14 +61,14 @@ public class Worker extends Agent {
     public void readMessage(Message msg) {
         switch(msg.getMatter()){
             case "found": {
+                Utils.okPrint("Máquina com os requerimentos pedidos foi achada! => " + msg.getBody()[0]);
                 targetMachine = findMachineById(msg.getBody()[0]);
-                hosts = new LinkedList<Host>();
-                hosts.addLast(home);
-                hosts.addLast(targetMachine);
-                run();
+                break;
             }
+
             case "notfound": {
-                Utils.failPrint("Não achamos uma máquina para rodar seu máquina!");
+                Utils.failPrint("Não achamos uma máquina para rodar seu código! Mude os requerimentos.");
+                break;
             }
         }
     }
@@ -81,8 +83,17 @@ public class Worker extends Agent {
         }
     }
 
+    public void sendAgent() {
+        if(targetMachine != null){
+            run();
+        } else {
+            Utils.failPrint("O agente não tem um host para rodar, procure um host antes!");
+        }
+    }
+
     public void requestMachine (String [] requirements){
         try {
+            System.out.println("Mandando mensagem pra um seeker");
             LookupServer ns =  Utils.connectNameServer();
             AgentLookup seeker = ns.requestSeeker();
 
@@ -101,11 +112,19 @@ public class Worker extends Agent {
         this.payload = payload;
     }
 
+    public void setPayloadByPath (String path){
+        this.payload = Utils.readFile(path);
+    }
+
     public String[] getArgs() {
         return args;
     }
 
     public void setArgs(String[] args) {
         this.args = args;
+    }
+
+    public CodeResult getCodeResult() {
+        return result;
     }
 }

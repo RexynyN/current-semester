@@ -18,6 +18,7 @@ import com.uws.jupiter.nameserver.LookupServer;
 public abstract class Agent implements Runnable, Serializable {
     protected byte[] byteCodes;
     protected LinkedList<Host> hosts;
+    protected Host currentHost;
     protected Host home;
     protected String id; 
 
@@ -53,7 +54,8 @@ public abstract class Agent implements Runnable, Serializable {
     }
 
     public void goTo(Host host) {
-        // TODO: Atualizar no servidor de nome
+        // Atualiza no servidor de nomes
+        updateAgentLocation(host);
 
         if(host.equals(home)){
             getMeHome();
@@ -72,7 +74,6 @@ public abstract class Agent implements Runnable, Serializable {
             hosts.removeFirst();
             if (host != null)
                 goTo(host);
-            exc.printStackTrace();
         } catch(NotBoundException nbe){
             System.out.println("It was not bound");
             nbe.printStackTrace();
@@ -100,7 +101,6 @@ public abstract class Agent implements Runnable, Serializable {
 
     /** The entry point for the controlling thread of execution */
     public void run() {
-        Host host;
         if (hosts == null) {
             hosts = new LinkedList<Host>();
             hosts.addLast(home);
@@ -111,10 +111,20 @@ public abstract class Agent implements Runnable, Serializable {
             hosts = null;
         } 
         else {
-            host = hosts.getFirst();
+            onArrival(currentHost);
+            currentHost = hosts.getFirst();
             hosts.removeFirst();
-            onArrival(host);
-            goTo(host);
+            goTo(currentHost);
+        }
+    }
+
+    private void updateAgentLocation(Host newLocation) {
+        try {
+            LookupServer ns = Utils.connectNameServer();
+            ns.updateAgentLocation(this, newLocation);
+        } catch (Exception e) {
+            Utils.failPrint("Não foi possível dar update na localização do agente.");
+            e.printStackTrace();
         }
     }
 
@@ -124,7 +134,12 @@ public abstract class Agent implements Runnable, Serializable {
         try {
             LookupServer ns =  Utils.connectNameServer();
             agent = ns.searchAgent(receiver.getName());
-        
+
+            if(agent == null){
+                Utils.failPrint("Não foi possível mandar mensagem para o Agente");
+                return;
+            }
+            
             Host location = agent.getOriginAgency();
             Registry registry = LocateRegistry.getRegistry("localhost", location.getPort());
             Agency mail = (Agency) registry.lookup(location.getName());

@@ -28,8 +28,7 @@ public class AgentLookup implements Serializable {
         if (this.getClass() == obj.getClass()){
             AgentLookup al = (AgentLookup) obj;
             return this.originAgency.equals(al.getOriginAgency()) &&
-                    this.name.equals(al.getName()) &&
-                    this.type.equals(al.getType());
+                    this.name.equals(al.getName());
         }
 
         return false;

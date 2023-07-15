@@ -13,30 +13,18 @@ public class AgencyServer {
     private static Host self;
 
     public static void main(String[] args) {
-        // Checa se tem alguma coisa nos argumentos
-        if (args.length == 0){
-            // Preguiça de digitar isso nos testes omegalul
-            String name = "YWing";
-            int port = 4444;
+        // Preguiça de digitar isso nos testes omegalul
+        String name = "YWing";
+        int port = 4444;
 
-            self = new Host(port, name);
+        // Scanner scan = new Scanner(System.in);
+        // System.out.print("Nome da Agência: ");
+        // String name = scan.nextLine().trim();
+        // System.out.print("Porta em que a agência deve rodar: ");
+        // int port = scan.nextInt();
 
-            // Scanner scan = new Scanner(System.in);
-            // System.out.print("Nome da Agência: ");
-            // String name = scan.nextLine().trim();
-            // System.out.print("Porta em que a agência deve rodar: ");
-            // int port = scan.nextInt();
-
-            initiateServer(self);
-            return;
-        }
-
-        if(args.length < 3){
-            Utils.failPrint("Erro ao iniciar o servidor de nomes, argumentos inválidos!");
-            Utils.infoPrint("Argumentos: <tipo servidor (seeker | worker)> <nome> <porta>");
-        }
-
-        // TODO: Fazer a lógica do servidor de seekers
+        self = new Host(port, name);
+        initiateServer(self);
     }
 
     public static void initiateServer(Host home){

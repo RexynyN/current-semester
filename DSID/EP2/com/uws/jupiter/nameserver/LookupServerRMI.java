@@ -54,7 +54,7 @@ public class LookupServerRMI extends UnicastRemoteObject implements LookupServer
 
     public AgentLookup searchAgent(String id){
         for (AgentLookup agent : agents){
-            if(agent.getName() == id)
+            if(agent.getName().equals(id))
                 return agent;
         }
 
@@ -89,7 +89,7 @@ public class LookupServerRMI extends UnicastRemoteObject implements LookupServer
 
     public Host searchAgency(String id){
         for (Host agent : agencies){
-            if(agent.getName() == id)
+            if(agent.getName().equals(id))
                 return agent;
         }
 
@@ -97,9 +97,12 @@ public class LookupServerRMI extends UnicastRemoteObject implements LookupServer
     }
 
     public AgentLookup requestSeeker() throws RemoteException {
-        Agent newSeeker = seekerAgency.createAgent("seeker");
+        Seeker newSeeker = seekerAgency.createSeeker();
 
-        return new AgentLookup(newSeeker.getName(), newSeeker.getClassName(), newSeeker.getHome());
+        AgentLookup sal = new AgentLookup(newSeeker.getName(), newSeeker.getClassName(), newSeeker.getHome());
+        this.registerAgent(newSeeker);
+
+        return sal;
     }
 
     public void registerSeekerAgency(Host newSeeker){  

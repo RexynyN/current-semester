@@ -10,9 +10,9 @@ import com.uws.jupiter.common.Host;
 import com.uws.jupiter.common.Utils;
 
 public class NameServer {
-    private static final String name = "nameserver";
+    private static final String name = "NameServer";
     private static final int port = 5454;
-    private static final String seekerName = "seekerserver";
+    private static final String seekerName = "SeekerServer";
     private static final int seekerPort = 4545;
 
     public static void main(String [] args){
@@ -45,7 +45,6 @@ public class NameServer {
             System.exit(0);
         }
     }
-
 
     private static void registerSeekerServer(Host ss) {
         try {

@@ -2,7 +2,6 @@ package com.uws.jupiter.common;
 
 import java.io.Serializable;
 
-import com.uws.jupiter.common.agents.Agent;
 import com.uws.jupiter.nameserver.AgentLookup;
 
 public class Message implements Serializable{

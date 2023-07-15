@@ -75,11 +75,6 @@ public class Apollo implements Runnable{
         }
     }
 
-    private static String tidySourceCode (String sourceCode){
-        // 
-        return "";
-    }
-
     private static String getClassName (String sourceCode){
         String [] parts = sourceCode.split("\n");
         for (String st : parts){

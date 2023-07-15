@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.uws.jupiter.common.Host;
 import com.uws.jupiter.common.agents.Agent;
-import com.uws.jupiter.common.agents.Seeker;
 
 public interface LookupServer extends Remote {
     public List<AgentLookup> listAgents() throws RemoteException;
