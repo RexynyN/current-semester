@@ -104,6 +104,7 @@ public class Client2 {
         worker.setPayloadByPath(rota);
        // Copiar e colar: C:\\Users\\Admin\\codes\\current-semester\\DSID\\EP2\\Blooie.java
 
+       
         System.out.println("Digite os argumentos: *end para finalizar");
         String args[] = new String[100];
 
