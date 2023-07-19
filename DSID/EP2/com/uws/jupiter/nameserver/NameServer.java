@@ -9,17 +9,20 @@ import com.uws.jupiter.agency.AgencyRMI;
 import com.uws.jupiter.common.Host;
 import com.uws.jupiter.common.Utils;
 
+// Servidor de nomes
 public class NameServer {
     private static final String name = "NameServer";
     private static final int port = 5454;
     private static final String seekerName = "SeekerServer";
     private static final int seekerPort = 4545;
 
+    // Inicializa o servidor de nomes e o servidor de seekers único
     public static void main(String [] args){
         initiateNameServer();
         initiateSeekerServer();
     }
 
+    // Inicializa o servidor de nomes
     public static void initiateNameServer(){
         try {
             LookupServer server = new LookupServerRMI();
@@ -32,6 +35,7 @@ public class NameServer {
         }
     }
 
+    // Inicia o servidor de seekers
     public static void initiateSeekerServer(){
         Host seekerHost = new Host(seekerPort, seekerName);
         try {
@@ -46,6 +50,7 @@ public class NameServer {
         }
     }
 
+    // Registra o servidor de seekers
     private static void registerSeekerServer(Host ss) {
         try {
             LookupServer nameServer = Utils.connectNameServer();

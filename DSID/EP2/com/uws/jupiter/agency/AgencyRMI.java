@@ -12,8 +12,10 @@ import com.uws.jupiter.common.Utils;
 import com.uws.jupiter.common.agents.Agent;
 import com.uws.jupiter.common.agents.Seeker;
 import com.uws.jupiter.common.agents.Worker;
+import com.uws.jupiter.common.apollo.CodeResult;
 import com.uws.jupiter.nameserver.LookupServer;
 
+// Implementação de uma agência usando RMI
 public class AgencyRMI extends UnicastRemoteObject implements Agency {
     private List<Agent> agents = new ArrayList<Agent>(); 
     private final Host home;
@@ -23,7 +25,7 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
         this.home = home;
     }
 
-
+    // Recebe um agente de outra agência e o roda
     @Override
     public void runAgent(String agentName, Agent agent, byte[] byteCodes) {
         Utils.infoPrint("Um novo agente chegou! Bem-vindo " + agent.getId());
@@ -37,6 +39,7 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
         }
     }
 
+    // Função que roda quando o agente volta pra casa
     @Override
     public void returnHome(String agentName, Agent agent, byte[] byteCodes) throws RemoteException {
         String [] name = agent.getName().split(".");
@@ -45,6 +48,7 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
         // agent.onReturn();
     }
 
+    // Repassa uma mensagem para um agente dessa agência
     @Override
     public void forwardMessage(String agentName, Message message) throws RemoteException {
         System.out.println("Mensagem Recebida!");
@@ -54,6 +58,7 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
         }
     }
 
+    // Cria um seeker e o retorna
     @Override
     public Seeker createSeeker() throws RemoteException {
         String id = "seeker-" + home.getName() + "-" + Utils.getRandomID();
@@ -62,6 +67,7 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
         return newSeeker;
     }
 
+    // Cria um worker e o retorna
     @Override
     public Worker createWorker() throws RemoteException {
         String id = "worker-" + home.getName() + "-" + Utils.getRandomID();
@@ -71,6 +77,39 @@ public class AgencyRMI extends UnicastRemoteObject implements Agency {
         return newWorker;
     }
 
+    // Coloca os parâmetros recebidos dentro um worker
+    public void setWorkerParams(String id, String payload, String[] argsu){
+        Worker sus = null;
+        for (int i = 0; i < agents.size(); i++){
+            if(agents.get(i).getId().equals(id)){
+                sus = (Worker) agents.get(i);
+                agents.remove(agents.get(i));
+            }
+        }
+
+        sus.setPayload(payload);
+        sus.setArgs(argsu);
+        agents.add(sus);
+    }
+
+    // Passa o agente por toda sua "jornada" de ir até uma agência, rodar e voltar
+    @Override
+    public CodeResult agentJourney(String id, String[] reqs){
+        Worker sus = null;
+        for (int i = 0; i < agents.size(); i++){
+            if(agents.get(i).getId().equals(id)){
+                sus = (Worker) agents.get(i);
+                agents.remove(agents.get(i));
+            }
+        }
+
+        System.out.println(sus);
+
+        sus.requestMachine(reqs);
+        return sus.getCodeResult();
+    }
+
+    // Registra um agente no servidor de nomes
     private void agentRegister(Agent agent) {
         try {
             LookupServer ns = Utils.connectNameServer();

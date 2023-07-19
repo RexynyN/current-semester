@@ -9,28 +9,24 @@ import com.uws.jupiter.common.Host;
 import com.uws.jupiter.common.Utils;
 import com.uws.jupiter.nameserver.LookupServer;
 
+// Cria uma agência sem um client, ou seja, que é só server para receber agentes
 public class AgencyServer {
     private static Host self;
 
     public static void main(String[] args) {
-        // Preguiça de digitar isso nos testes omegalul
-        String name = "YWing";
-        int port = 4444;
+        // Pega as informações para iniciar um agência
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Nome da Agência: ");
+        String name = scan.nextLine().trim();
+        System.out.print("Porta em que a agência deve rodar: ");
+        int port = scan.nextInt();
+        scan.close();
 
-        // Scanner scan = new Scanner(System.in);
-        // System.out.print("Nome da Agência: ");
-        // String name = scan.nextLine().trim();
-        // System.out.print("Porta em que a agência deve rodar: ");
-        // int port = scan.nextInt();
-
-        self = new Host(port, name);
-        initiateServer(self);
-         name = "Joji";
-         port = 1010;
         self = new Host(port, name);
         initiateServer(self);
     }
 
+    // Inicializa uma agência de fato
     public static void initiateServer(Host home){
         try {
             Agency agency = new AgencyRMI(home);
@@ -46,6 +42,7 @@ public class AgencyServer {
         }
     }
 
+    // Registra uma agência no servidor de nomes
     private static void registerAgency() {
         try {
             LookupServer nameServer = Utils.connectNameServer();

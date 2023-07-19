@@ -2,8 +2,7 @@ package com.uws.jupiter.common;
 
 import java.io.Serializable;
 
-import com.uws.jupiter.nameserver.AgentLookup;
-
+// Representa uma mensagem mandada entre agentes
 public class Message implements Serializable{
     private AgentLookup sender;
     private String matter;

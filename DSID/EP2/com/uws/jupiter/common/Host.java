@@ -2,6 +2,7 @@ package com.uws.jupiter.common;
 
 import java.io.Serializable;
 
+// Representa uma agência, encapsulando todas as informações necessárias para encontrá-lo
 public class Host implements Serializable {
     private String host = "localhost";
     private int port;

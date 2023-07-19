@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import com.uws.jupiter.nameserver.LookupServer;
 
+// Classe de utilidades diversas usadas no projeto
 public class Utils {
     // Cores do texto
     private static final String OKBLUE = "\033[94m";
@@ -23,8 +24,13 @@ public class Utils {
     private static String nsName = "NameServer";
     private static int nsPort = 5454;
 
+    // ======================================= TEXTOS COLORIDOS =======================================  
     public static void failPrint(Object str){
         System.out.println(FAIL + str.toString() + ENDC);
+    }
+
+    public static void bluePrint(Object str){
+        System.out.println(OKBLUE + str.toString() + ENDC);
     }
 
     public static void okPrint(Object str){
@@ -39,6 +45,7 @@ public class Utils {
         System.out.println(OKBLUE + cmd + ENDC + WARNING + " => " + help + ENDC);
     }
 
+    // Lê um arquivo o retorna como uma string
     public static String readFile(String fileName) {
         try {
             Path path = Paths.get(fileName);
@@ -57,6 +64,7 @@ public class Utils {
         }
     }
 
+    // Lê um arquivo e o retorna como uma lista de strings (uma string para cada linha)
     public static String [] readFileAllLines(String fileName) {
         try {
             Path path = Paths.get(fileName);
@@ -74,16 +82,15 @@ public class Utils {
         }
     }
 
-
-
+    // Retorna um número pseudo-aleatório para formar o ID de um agente
     public static int getRandomID(){
         Random r = new Random();
-        int lower = 100000;
         int upper = 999999999;
 
-        return r.nextInt( upper);
+        return r.nextInt(upper);
     }
 
+    // Utilidade para se conectar ao servidor de nomes
     public static LookupServer connectNameServer(){
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", nsPort);

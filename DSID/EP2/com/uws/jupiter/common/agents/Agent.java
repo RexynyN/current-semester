@@ -8,19 +8,23 @@ import java.rmi.registry.Registry;
 import java.util.*;
 
 import com.uws.jupiter.agency.Agency;
+import com.uws.jupiter.common.AgentLookup;
 import com.uws.jupiter.common.Host;
 import com.uws.jupiter.common.Message;
 import com.uws.jupiter.common.Utils;
-import com.uws.jupiter.nameserver.AgentLookup;
 import com.uws.jupiter.nameserver.LookupServer;
 
-/** A simple mobile agent */
+// Uma classe abstrata para implementação de um agente móvel
 public abstract class Agent implements Runnable, Serializable {
     protected byte[] byteCodes;
     protected LinkedList<Host> hosts;
     protected Host currentHost;
     protected Host home;
     protected String id; 
+
+    public String getId() {
+        return id;
+    }
 
     public static final String EXT = ".class";
 
@@ -39,20 +43,23 @@ public abstract class Agent implements Runnable, Serializable {
         this.id = id;
     }
 
-    /** Get the name of this Agent */
+    // Nome único desse agente
     public String getName() {
         return this.id;
     }
 
+    // Pega o tipo de agente que ele é
     public String getClassName(){
         String[] strips = getClass().getName().split("\\.");
         return strips[strips.length - 1];
     }
 
+    // Retorna a agência de origem
     public Host getHome() {
         return home;
     }
 
+    // Transporta o agente para uma agência
     public void goTo(Host host) {
         // Atualiza no servidor de nomes
         updateAgentLocation(host);
@@ -80,6 +87,7 @@ public abstract class Agent implements Runnable, Serializable {
         }
     }
 
+    // Retorna o agente para casa
     protected void getMeHome(){
         try {
             Registry registry = LocateRegistry.getRegistry(home.getHost(), home.getPort());
@@ -94,12 +102,13 @@ public abstract class Agent implements Runnable, Serializable {
         } 
     }
 
+    // Apaga todos os hosts da lista de hosts deixando apenas casa
     public void leaveOnlyHome(){
         hosts.clear();
         hosts.addLast(home);
     }
 
-    /** The entry point for the controlling thread of execution */
+    // Entrypoint para a execução do agente
     public void run() {
         if (hosts == null) {
             hosts = new LinkedList<Host>();
@@ -118,6 +127,7 @@ public abstract class Agent implements Runnable, Serializable {
         }
     }
 
+    // Dá update na localização atual (qual agência) o agente está
     private void updateAgentLocation(Host newLocation) {
         try {
             LookupServer ns = Utils.connectNameServer();
@@ -128,6 +138,7 @@ public abstract class Agent implements Runnable, Serializable {
         }
     }
 
+    // Manda uma mensagem para algum outro agente
     public void sendMessage(AgentLookup receiver, Message msg) {
         AgentLookup agent;
         // Pega a agência de origem do agente e manda mensagem
@@ -151,29 +162,26 @@ public abstract class Agent implements Runnable, Serializable {
         }
     }
 
-    /** Get the Java byte codes for this Agent */
     public byte[] getByteCodes() {
         return byteCodes;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    /** Add a host to the top of the stack */
+    // Adiciona uma agência no topo da lista de hosts 
     public void addHost(Host host) {
         hosts.addFirst(host);
     }
 
-    /** The code that should be executed before this Agent leaves home */
+    // ================================ Métodos abstratos ================================ 
+
+    // Código a ser rodado antes do agente sair da agência de origem
     public abstract void beforeDeparture();
 
-    /** The code that should be executed when this Agent arrives at a remote Sandbox */
+    // Código a ser rodado ao chegar a uma agência estrangeira
     public abstract void onArrival(Host host);
 
-    /** The code that should be executed when this Agent returns home */
+    // Código a ser rodado assim que o agente volta para a agência de origem
     public abstract void onReturn();
 
-    // Decide o que fazer com a mensagem recebida de algum agente
+    // Código a ser rodado assim que ele recebe uma mensagem de outro agente
     public abstract void readMessage(Message msg);
 }

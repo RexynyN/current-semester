@@ -11,9 +11,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 
-/**
- * Apollo é a engine para rodar códigos Java em tempo de execução, e que dá toda a confiança que sua empresa precisa!
- */
+// Apollo é a engine para rodar códigos Java em tempo de execução, e que dá toda a confiança que sua empresa precisa!
 public class Apollo implements Runnable{
     /**
      * @param sourceCode

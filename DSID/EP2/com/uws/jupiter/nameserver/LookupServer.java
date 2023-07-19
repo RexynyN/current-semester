@@ -4,9 +4,11 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import com.uws.jupiter.common.AgentLookup;
 import com.uws.jupiter.common.Host;
 import com.uws.jupiter.common.agents.Agent;
 
+// Interface para implementar um servidor de nomes
 public interface LookupServer extends Remote {
     public List<AgentLookup> listAgents() throws RemoteException;
     public boolean registerAgent(Agent agent) throws RemoteException;

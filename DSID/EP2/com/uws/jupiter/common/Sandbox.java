@@ -2,12 +2,7 @@ package com.uws.jupiter.common;
 
 import com.uws.jupiter.common.agents.Agent;
 
-/**
- * A Sandbox that an Agent can "play" in.
- *
- * Each Sandbox runs in its own thread of execution.
- * It runs its Agent in that thread.
- */
+// Uma Sandbox represente uma thread de execução criada para um agente 
 public class Sandbox implements Runnable {
    private Agent agent;
    private Thread controlThread;

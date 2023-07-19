@@ -1,17 +1,14 @@
 package com.uws.jupiter.common.agents;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import com.uws.jupiter.common.AgentLookup;
 import com.uws.jupiter.common.Host;
 import com.uws.jupiter.common.Message;
 import com.uws.jupiter.common.Utils;
-import com.uws.jupiter.nameserver.AgentLookup;
 import com.uws.jupiter.nameserver.LookupServer;
 
-/**
- * Um agente que procura uma agência que esteja rodando numa máquina com as especificações passadas
-*/
+// Um agente que procura uma agência que esteja rodando numa máquina com as especificações passadas
 public class Seeker extends Agent {
     private String [] requirements;
     private AgentLookup self;
@@ -24,9 +21,10 @@ public class Seeker extends Agent {
         self = new AgentLookup(id, this.getClassName(), this.home);
     }
 
+    // Antes de sair, ele pega todas as agências disponíveis e coloca com destinos
     @Override
     public void beforeDeparture() {
-        System.out.println(getId() + " indo procurar uma máquina bonita!");
+        System.out.println(getName() + " indo procurar uma máquina bonita!");
         try {
             LookupServer ns =  Utils.connectNameServer();
             List<Host> agencies = ns.listAgencies();
@@ -43,10 +41,10 @@ public class Seeker extends Agent {
         }
     }
 
+    // Assim que chega na agência estrangeira, ele lê o <agência>.txt e vê se as especificações são iguais
     @Override
     public void onArrival(Host host) {
         String [] reqs = Utils.readFileAllLines(host.getName() + ".txt");
-
         boolean equal = true;
         for(int i = 0; i < reqs.length; i++){
             if (!reqs[i].trim().equals(requirements[i].trim())){
@@ -60,6 +58,7 @@ public class Seeker extends Agent {
         }
     }
 
+    // Ao retorna para a agência de Seekers, ele manda uma mensagem reportando se achou ou não uma agência
     @Override
     public void onReturn() {
         // Se ele achar uma máquina, retorna.
@@ -73,11 +72,13 @@ public class Seeker extends Agent {
         }
     }
     
+    // Inicializa o fluxo de procurar uma máquina
     private void seekMachine(String [] body) {
         this.requirements = body;
         run();
     }
 
+    // Lê uma mensagem pedindo para procurar uma máquina
     @Override
     public void readMessage(Message msg) {
         switch(msg.getMatter()){

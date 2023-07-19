@@ -1,12 +1,11 @@
+// Uma classe teste :)
 public class Blooie {
-    public static int main(String[] args) {
-        System.out.println("Hello World!");
-        if(args.length >= 2){
-            int a = Integer.parseInt(args[0]);
-            int b = Integer.parseInt(args[1]);
-            return a + b;
-        }
+    public static String main(String[] args) {
+        System.out.println("Olá mundo!");
+        System.out.println("Eu me chamo " + args[0]);
+        System.out.println("Tenho " + args[1] + " anos");
+        System.out.println("E gosto bastante de " + args[2]);
 
-        return 42;
+        return "Tenha um bom dia, todos :)";
     }
 }

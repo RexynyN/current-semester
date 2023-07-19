@@ -1,9 +1,8 @@
-package com.uws.jupiter.nameserver;
+package com.uws.jupiter.common;
 
 import java.io.Serializable;
 
-import com.uws.jupiter.common.Host;
-
+// Representa um agente na rede e sua localização 
 public class AgentLookup implements Serializable {
     private String name; 
     private String type;
