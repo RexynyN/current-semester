@@ -25,6 +25,10 @@ public class AgencyServer {
 
         self = new Host(port, name);
         initiateServer(self);
+         name = "Joji";
+         port = 1010;
+        self = new Host(port, name);
+        initiateServer(self);
     }
 
     public static void initiateServer(Host home){

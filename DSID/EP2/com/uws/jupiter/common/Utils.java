@@ -81,7 +81,7 @@ public class Utils {
         int lower = 100000;
         int upper = 999999999;
 
-        return r.nextInt(lower, upper);
+        return r.nextInt( upper);
     }
 
     public static LookupServer connectNameServer(){
