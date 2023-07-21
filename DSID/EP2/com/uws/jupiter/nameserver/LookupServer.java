@@ -23,3 +23,4 @@ public interface LookupServer extends Remote {
     public void registerSeekerAgency(Host newSeeker) throws RemoteException;  
     public AgentLookup requestSeeker() throws RemoteException;
 }
+
