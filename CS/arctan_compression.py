@@ -39,4 +39,4 @@ def transform_audio(filename, factor=2):
     new_file += "-tranformed.wav"
     wavfile.write(new_file, sr, comp)
 
-transform_audio("audio.wav", -5)
+transform_audio("audio.wav", 5)
