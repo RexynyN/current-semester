@@ -1,0 +1,7 @@
+numpy==1.24.2 
+mtcnn==0.1.1
+opencv-python==4.8.0.76
+matplotlib==3.7.3
+pillow==9.4.0
+tensorflow==2.13.0
+tensorflow_similarity==0.17.1

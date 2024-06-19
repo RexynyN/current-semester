@@ -3,5 +3,10 @@
 # *.png
 
 
+# EP de CG
 */rawphotos
 */training
+*/saved_models
+*/pretrained_models
+*/aug
+/CG/*.zip
